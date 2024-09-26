@@ -10,7 +10,7 @@ const Home = () => {
                 <Image style={styles.image} source={require('../assets/background/home.png')}/>
             </View>
 
-            <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('QuizScreen')}>
+            <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('QuizStartScreen')}>
                 <Text style={styles.btnTxt}>Quiz</Text>
             </TouchableOpacity>
 

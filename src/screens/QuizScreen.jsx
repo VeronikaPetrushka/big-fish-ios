@@ -1,10 +1,11 @@
-import { SafeAreaView, View } from "react-native"
+import { SafeAreaView } from "react-native"
 import Quiz from "../components/Quiz"
 
-const QuizScreen = () => {
+const QuizScreen = ({route}) => {
+    const {timer, responses, mode} = route.params
     return (
         <SafeAreaView style={styles.container}>
-            <Quiz />
+            <Quiz timer={timer} responses={responses} mode={mode}/>
         </SafeAreaView>
     )
 }; 

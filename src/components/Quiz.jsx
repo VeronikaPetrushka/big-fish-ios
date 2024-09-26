@@ -1,216 +1,190 @@
-import React, { useState } from 'react'
-import { View, Image, Text, TouchableOpacity, StyleSheet } from "react-native"
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import quiz from '../constants/quiz.js';
 
-const Quiz = () => {
-    const [toggleTimer, setToggleTimer] = useState(false);
-    const [toggleResponses, setToggleResponses] = useState(false);
-    const [toggleWeight, setToggleWeight] = useState(false);
+const Quiz = ({ timer, responses }) => {
+    const [currentTopicIndex, setCurrentTopicIndex] = useState(0);
+    const [currentQuestionIndexInTopic, setCurrentQuestionIndexInTopic] = useState(0);
+    const [globalQuestionIndex, setGlobalQuestionIndex] = useState(0);
+    const [selectedOption, setSelectedOption] = useState(null);
+    const [correctOption, setCorrectOption] = useState(null);
+    const [score, setScore] = useState(0);
+    const [remainingTime, setRemainingTime] = useState(0);
+    const [timerActive, setTimerActive] = useState(false);
+    
+    const currentTopic = quiz[currentTopicIndex];
+    
+    const totalQuestions = quiz.reduce((sum, topic) => sum + topic.questions.length, 0);
 
-    const handleToggleTimer = () => {
-        setToggleTimer(!toggleTimer);
+    useEffect(() => {
+        if (timer === 'Yes') {
+            setRemainingTime(300);
+            setTimerActive(true);
+        }
+    }, [timer]);
+
+    useEffect(() => {
+        if (timerActive && remainingTime > 0) {
+            const timerInterval = setInterval(() => {
+                setRemainingTime(prevTime => prevTime - 1);
+            }, 1000);
+
+            return () => clearInterval(timerInterval);
+        } else if (remainingTime === 0) {
+            console.log('Time is up! Your score:', score);
+        }
+    }, [timerActive, remainingTime]);
+
+    if (!currentTopic) {
+        return <Text style={styles.errorText}>No more topics available!</Text>;
+    }
+
+    const currentQuestion = currentTopic.questions[currentQuestionIndexInTopic];
+
+    if (!currentQuestion) {
+        return <Text style={styles.errorText}>No more questions available!</Text>;
+    }
+
+    const selectedResponses = responses === 4 ? currentQuestion.options : currentQuestion.allOptions;
+
+    const handleOptionPress = (option) => {
+        setSelectedOption(option);
+        if (option.correct) {
+            setCorrectOption(option);
+            setScore(prevScore => prevScore + 100);
+        } else {
+            setCorrectOption(currentQuestion.options.find(o => o.correct));
+        }
+
+        setTimeout(() => {
+            handleNextQuestion();
+        }, 1000);
     };
 
-    const handleToggleResponses = () => {
-        setToggleResponses(!toggleResponses);
+    const handleNextQuestion = () => {
+        const isLastQuestionInTopic = currentQuestionIndexInTopic >= currentTopic.questions.length - 1;
+        const isLastTopic = currentTopicIndex >= quiz.length - 1;
+
+        if (globalQuestionIndex + 1 >= totalQuestions) {
+            console.log('Quiz completed! Your score:', score);
+        } else if (isLastQuestionInTopic) {
+            setCurrentTopicIndex(currentTopicIndex + 1);
+            setCurrentQuestionIndexInTopic(0);
+        } else {
+            setCurrentQuestionIndexInTopic(currentQuestionIndexInTopic + 1);
+        }
+
+        setGlobalQuestionIndex(globalQuestionIndex + 1);
+        setSelectedOption(null);
+        setCorrectOption(null);
     };
 
-    const handleToggleWeight = () => {
-        setToggleWeight(!toggleWeight);
+    const formatTime = (time) => {
+        const minutes = Math.floor(time / 60);
+        const seconds = time % 60;
+        return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     };
 
-    return(
+    if (globalQuestionIndex >= totalQuestions) {
+        return (
+            <View style={styles.container}>
+                <Text style={styles.finishText}>Quiz completed! Your score: {score}</Text>
+            </View>
+        );
+    }
+
+    return (
         <View style={styles.container}>
-            <View style={styles.imageContainer}>
-                <Image style={styles.image} source={require('../assets/background/home.png')}/>
-            </View>
+            <Text style={styles.topic}>{currentTopic.theme}</Text>
+            <Text style={styles.question}>{currentQuestion.question}</Text>
+            <Text style={styles.score}>Score: {score}</Text>
+            {timer === 'Yes' && (
+                <Text style={styles.timer}>Time Remaining: {formatTime(remainingTime)}</Text>
+            )}
+            <Text style={styles.stats}>
+                Question: {globalQuestionIndex + 1} / {totalQuestions}
+            </Text>
 
-            <View style={styles.regulatorContainer}>
-                <Text style={styles.regulatorTxt}>On time</Text>
-                <TouchableOpacity style={styles.toggleContainer} onPress={handleToggleTimer}>
-                    { toggleTimer ?
-                    <View style={{width: '100%', height: '100%', justifyContent: 'space-between', flexDirection: 'row'}}>
-                    <View style={[styles.toggle, toggleTimer ? styles.toggleRight : styles.toggleLeft]}>
-                        <Text style={[styles.toggleTxt, toggleTimer ? styles.toggleTxtRight : styles.toggleTxtLeft]}>No</Text>
-                    </View>
-                    <View style={[styles.toggleNone]}>
-                        <Text style={[styles.toggleTxt]}>Yes</Text>
-                    </View>
-                    </View>
-                    :
-                    <View style={{width: '100%', height: '100%', justifyContent: 'space-between', flexDirection: 'row'}}>
-                    <View style={[styles.toggleNone]}>
-                        <Text style={[styles.toggleTxt]}>No</Text>
-                    </View>
-                    <View style={[styles.toggle, toggleTimer ? styles.toggleRight : styles.toggleLeft]}>
-                        <Text style={[styles.toggleTxt, toggleTimer ? styles.toggleTxtRight : styles.toggleTxtLeft]}>Yes</Text>
-                    </View>
-                    </View>
-                    }
-                </TouchableOpacity>
+            <View style={styles.optionsContainer}>
+                {selectedResponses.map((option, index) => (
+                    <TouchableOpacity
+                        key={index}
+                        style={[
+                            styles.option,
+                            selectedOption === option && option.correct ? styles.correct : null,
+                            selectedOption === option && !option.correct ? styles.wrong : null,
+                            correctOption === option ? styles.correct : null,
+                        ]}
+                        onPress={() => handleOptionPress(option)}
+                        disabled={selectedOption !== null}
+                    >
+                        <Text style={styles.optionText}>{option.option}</Text>
+                    </TouchableOpacity>
+                ))}
             </View>
-
-            <View style={styles.regulatorContainer}>
-                <Text style={styles.regulatorTxt}>Number of responses</Text>
-                <TouchableOpacity style={styles.toggleContainer} onPress={handleToggleResponses}>
-                { toggleResponses ?
-                    <View style={{width: '100%', height: '100%', justifyContent: 'space-between', flexDirection: 'row'}}>
-                    <View style={[styles.toggle, toggleResponses ? styles.toggleRight : styles.toggleLeft]}>
-                        <Text style={[styles.toggleTxt, toggleResponses ? styles.toggleTxtRight : styles.toggleTxtLeft]}>4</Text>
-                    </View>
-                    <View style={[styles.toggleNone]}>
-                        <Text style={[styles.toggleTxt]}>6</Text>
-                    </View>
-                    </View>
-                    :
-                    <View style={{width: '100%', height: '100%', justifyContent: 'space-between', flexDirection: 'row'}}>
-                    <View style={[styles.toggleNone]}>
-                        <Text style={[styles.toggleTxt]}>4</Text>
-                    </View>
-                    <View style={[styles.toggle, toggleResponses ? styles.toggleRight : styles.toggleLeft]}>
-                        <Text style={[styles.toggleTxt, toggleResponses ? styles.toggleTxtRight : styles.toggleTxtLeft]}>6</Text>
-                    </View>
-                    </View>
-                    }
-                </TouchableOpacity>
-            </View>
-
-            <View style={styles.regulatorContainer}>
-                <Text style={styles.regulatorTxt}>Weight</Text>
-                <TouchableOpacity style={styles.toggleContainer} onPress={handleToggleWeight}>
-                { toggleWeight ?
-                    <View style={{width: '100%', height: '100%', justifyContent: 'space-between', flexDirection: 'row'}}>
-                    <View style={[styles.toggle, toggleWeight ? styles.toggleRight : styles.toggleLeft]}>
-                        <Text style={[styles.toggleTxt, toggleWeight ? styles.toggleTxtRight : styles.toggleTxtLeft]}>Low</Text>
-                    </View>
-                    <View style={[styles.toggleNone]}>
-                        <Text style={[styles.toggleTxt]}>High</Text>
-                    </View>
-                    </View>
-                    :
-                    <View style={{width: '100%', height: '100%', justifyContent: 'space-between', flexDirection: 'row'}}>
-                    <View style={[styles.toggleNone]}>
-                        <Text style={[styles.toggleTxt]}>Low</Text>
-                    </View>
-                    <View style={[styles.toggle, toggleWeight ? styles.toggleRight : styles.toggleLeft]}>
-                        <Text style={[styles.toggleTxt, toggleWeight ? styles.toggleTxtRight : styles.toggleTxtLeft]}>High</Text>
-                    </View>
-                    </View>
-                    }
-                </TouchableOpacity>
-            </View>
-
-            <TouchableOpacity style={styles.btn}>
-                <Text style={styles.btnTxt}>Start</Text>
-            </TouchableOpacity>
         </View>
-    )
+    );
 };
 
 const styles = StyleSheet.create({
     container: {
-        width: '100%',
-        height: '110%',
-        backgroundColor: '#c1e5fa',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        padding: 30,
-        paddingTop: 80
+        flex: 1,
+        padding: 20,
     },
-
-    imageContainer: {
-        width: "100%",
-        height: 270,
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginBottom: 70,
-        borderRadius: 12,
-        overflow: 'hidden'
-    },
-
-    image: {
-        width: '100%',
-        height: '100%',
-        resizeMode: 'cover'
-    },
-
-    regulatorContainer: {
-        width: '100%',
-        justifyContent: 'flex-start',
-        alignItems: 'flex-start'
-    },
-
-    regulatorTxt: {
-        fontSize: 22,
+    topic: {
+        fontSize: 24,
         fontWeight: 'bold',
-        marginBottom: 7
+        marginBottom: 10,
     },
-
-    toggleContainer: {
-        width: 170,
-        height: 50,
-        alignItems: 'center',
-        padding: 5,
-        borderRadius: 30,
-        borderWidth: 1,
-        borderColor: '#284c61',
-        marginBottom: 15,
-        flexDirection: 'row'
-    },
-
-    toggle: {
-        width: '49%',
-        height: '100%',
-        borderRadius: 30,
-        backgroundColor: '#284c61',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-
-    toggleNone: {
-        width: '49%',
-        height: '100%',
-        borderRadius: 30,
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    
-    toggleRight: {
-        alignSelf: 'flex-end',
-    },
-
-    toggleLeft: {
-        alignSelf: 'flex-start',
-    },
-
-    toggleTxt: {
+    question: {
         fontSize: 18,
-        color: '#284c61'
+        marginBottom: 20,
     },
-
-    toggleTxtRight: {
-        color: 'white'
+    score: {
+        fontSize: 18,
+        marginBottom: 10,
+        fontWeight: 'bold',
     },
-
-    toggleTxtLeft: {
-        color: 'white'
+    timer: {
+        fontSize: 18,
+        marginBottom: 10,
+        fontWeight: 'bold',
+        color: 'blue',
     },
-
-    btn: {
-        padding: 12, 
-        paddingHorizontal: 20,
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: '100%',
-        borderWidth: 1,
-        borderColor: '#284c61',
-        borderRadius: 12,
-        marginTop: 20
+    stats: {
+        fontSize: 16,
+        marginBottom: 20,
+        fontWeight: 'bold',
     },
-
-    btnTxt: {
-        fontSize: 20,
-        color: '#284c61',
-    }
+    optionsContainer: {
+        marginBottom: 20,
+    },
+    option: {
+        padding: 15,
+        marginVertical: 5,
+        borderRadius: 8,
+        backgroundColor: '#f0f0f0',
+    },
+    correct: {
+        backgroundColor: 'green',
+    },
+    wrong: {
+        backgroundColor: 'red',
+    },
+    optionText: {
+        fontSize: 16,
+    },
+    finishText: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        color: 'green',
+    },
+    errorText: {
+        fontSize: 18,
+        color: 'red',
+        textAlign: 'center',
+    },
 });
 
 export default Quiz;

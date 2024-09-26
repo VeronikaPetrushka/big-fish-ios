@@ -3,6 +3,7 @@ import { enableScreens } from 'react-native-screens';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './src/screens/HomeScreen.jsx';
+import QuizStartScreen from './src/screens/QuizStartScreen.jsx';
 import QuizScreen from './src/screens/QuizScreen.jsx';
 // import MusicPlayer from './src/components/MusicPlayer';
 
@@ -20,6 +21,11 @@ const App = () => {
                         <Stack.Screen 
                             name="HomeScreen" 
                             component={HomeScreen} 
+                            options={{ headerShown: false }} 
+                        />
+                        <Stack.Screen 
+                            name="QuizStartScreen" 
+                            component={QuizStartScreen} 
                             options={{ headerShown: false }} 
                         />
                         <Stack.Screen 
