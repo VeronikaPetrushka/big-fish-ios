@@ -4,9 +4,9 @@ import { useNavigation } from '@react-navigation/native';
 
 const QuizStart = () => {
     const navigation = useNavigation();
-    const [toggleTimer, setToggleTimer] = useState(false);
-    const [toggleResponses, setToggleResponses] = useState(false);
-    const [toggleMode, setToggleMode] = useState(false);
+    const [toggleTimer, setToggleTimer] = useState(true);
+    const [toggleResponses, setToggleResponses] = useState(true);
+    const [toggleMode, setToggleMode] = useState(true);
 
     const handleToggleTimer = () => {
         setToggleTimer(!toggleTimer);
@@ -52,31 +52,6 @@ const QuizStart = () => {
             </View>
 
             <View style={styles.regulatorContainer}>
-                <Text style={styles.regulatorTxt}>Number of responses</Text>
-                <TouchableOpacity style={styles.toggleContainer} onPress={handleToggleResponses}>
-                { toggleResponses ?
-                    <View style={{width: '100%', height: '100%', justifyContent: 'space-between', flexDirection: 'row'}}>
-                    <View style={[styles.toggle, toggleResponses ? styles.toggleRight : styles.toggleLeft]}>
-                        <Text style={[styles.toggleTxt, toggleResponses ? styles.toggleTxtRight : styles.toggleTxtLeft]}>4</Text>
-                    </View>
-                    <View style={[styles.toggleNone]}>
-                        <Text style={[styles.toggleTxt]}>6</Text>
-                    </View>
-                    </View>
-                    :
-                    <View style={{width: '100%', height: '100%', justifyContent: 'space-between', flexDirection: 'row'}}>
-                    <View style={[styles.toggleNone]}>
-                        <Text style={[styles.toggleTxt]}>4</Text>
-                    </View>
-                    <View style={[styles.toggle, toggleResponses ? styles.toggleRight : styles.toggleLeft]}>
-                        <Text style={[styles.toggleTxt, toggleResponses ? styles.toggleTxtRight : styles.toggleTxtLeft]}>6</Text>
-                    </View>
-                    </View>
-                    }
-                </TouchableOpacity>
-            </View>
-
-            <View style={styles.regulatorContainer}>
                 <Text style={styles.regulatorTxt}>Mode</Text>
                 <TouchableOpacity style={styles.toggleContainer} onPress={handleToggleMode}>
                 { toggleMode ?
@@ -100,6 +75,33 @@ const QuizStart = () => {
                     }
                 </TouchableOpacity>
             </View>
+
+            {toggleMode ||
+                        <View style={styles.regulatorContainer}>
+                        <Text style={styles.regulatorTxt}>Number of responses</Text>
+                        <TouchableOpacity style={styles.toggleContainer} onPress={handleToggleResponses}>
+                        { toggleResponses ?
+                            <View style={{width: '100%', height: '100%', justifyContent: 'space-between', flexDirection: 'row'}}>
+                            <View style={[styles.toggle, toggleResponses ? styles.toggleRight : styles.toggleLeft]}>
+                                <Text style={[styles.toggleTxt, toggleResponses ? styles.toggleTxtRight : styles.toggleTxtLeft]}>4</Text>
+                            </View>
+                            <View style={[styles.toggleNone]}>
+                                <Text style={[styles.toggleTxt]}>6</Text>
+                            </View>
+                            </View>
+                            :
+                            <View style={{width: '100%', height: '100%', justifyContent: 'space-between', flexDirection: 'row'}}>
+                            <View style={[styles.toggleNone]}>
+                                <Text style={[styles.toggleTxt]}>4</Text>
+                            </View>
+                            <View style={[styles.toggle, toggleResponses ? styles.toggleRight : styles.toggleLeft]}>
+                                <Text style={[styles.toggleTxt, toggleResponses ? styles.toggleTxtRight : styles.toggleTxtLeft]}>6</Text>
+                            </View>
+                            </View>
+                            }
+                        </TouchableOpacity>
+                    </View>
+            }
 
             <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('QuizScreen', {timer: toggleTimer ? 'No' : 'Yes', responses: toggleResponses ? 4 : 6, mode: toggleMode ? 'Easy' : 'Hard'})}>
                 <Text style={styles.btnTxt}>Start</Text>

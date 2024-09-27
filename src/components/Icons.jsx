@@ -27,6 +27,9 @@ const Icons = ({ type }) => {
       imageSource = require('../assets/panel/recipes.png');
       iconStyle = styles.panelIcon;
       break;
+    case 'coin':
+      imageSource = require('../assets/quiz/coin.png');
+      break;
   }
 
   return (

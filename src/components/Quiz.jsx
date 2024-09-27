@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import quiz from '../constants/quiz.js';
+import Icons from './Icons.jsx';
 
 const Quiz = ({ timer, responses }) => {
     const [currentTopicIndex, setCurrentTopicIndex] = useState(0);
@@ -9,8 +10,9 @@ const Quiz = ({ timer, responses }) => {
     const [selectedOption, setSelectedOption] = useState(null);
     const [correctOption, setCorrectOption] = useState(null);
     const [score, setScore] = useState(0);
-    const [remainingTime, setRemainingTime] = useState(0);
+    const [remainingTime, setRemainingTime] = useState(300);
     const [timerActive, setTimerActive] = useState(false);
+    const progress = useRef(new Animated.Value(1)).current;
     
     const currentTopic = quiz[currentTopicIndex];
     
@@ -18,8 +20,12 @@ const Quiz = ({ timer, responses }) => {
 
     useEffect(() => {
         if (timer === 'Yes') {
-            setRemainingTime(300);
             setTimerActive(true);
+            Animated.timing(progress, {
+                toValue: 0,
+                duration: 300000,
+                useNativeDriver: false,
+            }).start();
         }
     }, [timer]);
 
@@ -85,7 +91,7 @@ const Quiz = ({ timer, responses }) => {
         return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     };
 
-    if (globalQuestionIndex >= totalQuestions) {
+    if (globalQuestionIndex >= totalQuestions || remainingTime === 0) {
         return (
             <View style={styles.container}>
                 <Text style={styles.finishText}>Quiz completed! Your score: {score}</Text>
@@ -95,15 +101,28 @@ const Quiz = ({ timer, responses }) => {
 
     return (
         <View style={styles.container}>
+            {timer === 'Yes' && (
+                <View style={styles.progressBarContainer}>
+                    <Animated.View style={[styles.progressBar, { width: progress.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: ['0%', '100%'],
+                    }) }]} />
+                    <Text style={styles.timerText}>{formatTime(remainingTime)}</Text>
+                </View>
+            )}
             <Text style={styles.topic}>{currentTopic.theme}</Text>
             <Text style={styles.question}>{currentQuestion.question}</Text>
-            <Text style={styles.score}>Score: {score}</Text>
-            {timer === 'Yes' && (
-                <Text style={styles.timer}>Time Remaining: {formatTime(remainingTime)}</Text>
-            )}
+            <View style={styles.statsContainer}>
+            <View style={styles.scoreContainer}>
+                <View style={styles.scoreIcon}>
+                    <Icons type={'coin'}/>
+                </View>
+                <Text style={styles.score}>{score}</Text>
+            </View>
             <Text style={styles.stats}>
-                Question: {globalQuestionIndex + 1} / {totalQuestions}
+                {globalQuestionIndex + 1} / {totalQuestions}
             </Text>
+            </View>
 
             <View style={styles.optionsContainer}>
                 {selectedResponses.map((option, index) => (
@@ -128,33 +147,70 @@ const Quiz = ({ timer, responses }) => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        width: '100%',
+        height: '100%',
         padding: 20,
+        paddingTop: 30,
     },
     topic: {
         fontSize: 24,
         fontWeight: 'bold',
-        marginBottom: 10,
+        marginBottom: 30,
+        textAlign: 'center',
+        color: '#1e3949'
     },
     question: {
-        fontSize: 18,
+        fontSize: 20,
         marginBottom: 20,
+        textAlign: 'center',
+        height: 80,
+        color: '#1e3949'
+    },
+    statsContainer: {
+        width: '100%',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-around',
+        marginBottom: 80
+    },
+    scoreContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    scoreIcon: {
+        width: 40,
+        height: 40,
+        marginRight: 10
     },
     score: {
         fontSize: 18,
-        marginBottom: 10,
         fontWeight: 'bold',
+        color: '#1e3949'
     },
-    timer: {
-        fontSize: 18,
-        marginBottom: 10,
+    progressBarContainer: {
+        height: 30,
+        backgroundColor: '#ccc',
+        borderRadius: 15,
+        overflow: 'hidden',
+        justifyContent: 'center',
+        marginBottom: 40,
+    },
+    progressBar: {
+        width: '100%',
+        height: '100%',
+        backgroundColor: '#284c61',
+    },
+    timerText: {
+        position: 'absolute',
+        width: '100%',
+        textAlign: 'center',
         fontWeight: 'bold',
-        color: 'blue',
+        color: '#fff',
     },
     stats: {
-        fontSize: 16,
-        marginBottom: 20,
+        fontSize: 18,
         fontWeight: 'bold',
+        color: '#1e3949'
     },
     optionsContainer: {
         marginBottom: 20,
@@ -164,6 +220,8 @@ const styles = StyleSheet.create({
         marginVertical: 5,
         borderRadius: 8,
         backgroundColor: '#f0f0f0',
+        borderWidth: 1,
+        borderColor: '#284c61'
     },
     correct: {
         backgroundColor: 'green',
@@ -172,7 +230,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'red',
     },
     optionText: {
-        fontSize: 16,
+        fontSize: 18,
+        color: '#284c61'
     },
     finishText: {
         fontSize: 24,
