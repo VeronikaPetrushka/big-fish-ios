@@ -59,6 +59,7 @@ const Quiz = ({ timer, responses }) => {
 
     useEffect(() => {
         if (timer === 'Yes' && remainingTime > 0) {
+            progress.setValue(remainingTime / 300);
             
             const timerInterval = setInterval(() => {
                 setRemainingTime(prevTime => prevTime - 1);
@@ -179,10 +180,8 @@ const Quiz = ({ timer, responses }) => {
     const handleStoreModalVisible = async () => {
         if (storeModalVisible) {
             if (useTimeAmount > 0) {
-                const newTime = remainingTime + useTimeAmount;
-                setRemainingTime(newTime);
-                progress.setValue(newTime / 300);
-                
+                setRemainingTime(prevTime => prevTime + useTimeAmount);
+    
                 try {
                     await AsyncStorage.removeItem('useTimeAmount');
                     console.log('useTimeAmount cleared from storage');
@@ -195,6 +194,8 @@ const Quiz = ({ timer, responses }) => {
         }
         setStoreModalVisible(!storeModalVisible);
     };
+    
+    
 
     if (globalQuestionIndex >= totalQuestions || remainingTime === 0) {
         return (
