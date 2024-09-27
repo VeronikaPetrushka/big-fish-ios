@@ -236,7 +236,9 @@ const Quiz = ({ timer, responses }) => {
             </Text>
             </View>
 
-            <View style={styles.optionsContainer}>
+            <View style={[styles.optionsContainer,
+                selectedResponses === currentQuestion.allOptions && styles.optionsContainer6,
+            ]}>
                 {currentOptions.map((option, index) => (
                     <TouchableOpacity
                         key={index}
@@ -379,6 +381,10 @@ const styles = StyleSheet.create({
     },
     optionsContainer: {
         marginBottom: 20,
+        height: 250
+    },
+    optionsContainer6: {
+        height: 380
     },
     option: {
         padding: 15,
