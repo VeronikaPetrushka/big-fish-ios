@@ -30,6 +30,25 @@ const Icons = ({ type }) => {
     case 'coin':
       imageSource = require('../assets/quiz/coin.png');
       break;
+    case 'hint':
+      imageSource = require('../assets/quiz/hint-1.png');
+      break;
+    case 'quiz-store':
+      imageSource = require('../assets/quiz/quiz-store.png');
+      break;
+    case 'close':
+      imageSource = require('../assets/quiz/close.png');
+      iconStyle = styles.closeIcon;
+      break;
+    case 'plus':
+      imageSource = require('../assets/quiz/plus.png');
+      break;
+    case 'minus':
+      imageSource = require('../assets/quiz/minus.png');
+      break;
+    case 'time':
+      imageSource = require('../assets/quiz/clock.png');
+      break;
   }
 
   return (
@@ -52,6 +71,12 @@ const styles = StyleSheet.create({
     objectFit: 'cover',
     tintColor: '#284c61',
   },
+  closeIcon: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+    tintColor: '#1e3949',
+  }
 });
 
 export default Icons;

@@ -76,6 +76,8 @@ const QuizStart = () => {
                 </TouchableOpacity>
             </View>
 
+            {toggleMode && <View style={styles.placeholder}></View> }
+
             {toggleMode ||
                         <View style={styles.regulatorContainer}>
                         <Text style={styles.regulatorTxt}>Number of responses</Text>
@@ -197,6 +199,11 @@ const styles = StyleSheet.create({
 
     toggleTxtLeft: {
         color: 'white'
+    },
+
+    placeholder: {
+        width: '100%',
+        height: 98
     },
 
     btn: {
