@@ -11,12 +11,12 @@ const Icons = ({ type }) => {
       imageSource = require('../assets/panel/home.png');
       iconStyle = styles.panelIcon;
       break;
-    case 'dairy':
-      imageSource = require('../assets/panel/dairy.png');
+    case 'directory':
+      imageSource = require('../assets/panel/directory.png');
       iconStyle = styles.panelIcon;
       break;
-    case 'store':
-      imageSource = require('../assets/panel/store.png');
+    case 'diary':
+      imageSource = require('../assets/panel/diary.png');
       iconStyle = styles.panelIcon;
       break;
     case 'calendar':

@@ -1,8 +1,23 @@
+import React, { useState } from 'react'
 import { Text, View, Image, TouchableOpacity, StyleSheet } from "react-native"
 import { useNavigation } from '@react-navigation/native';
+import AboutModal from "./About";
+import SettingsModal from './Settings';
 
 const Home = () => {
     const navigation = useNavigation();
+    const [aboutModalVisible, setAboutModalVisible] = useState(false);
+    const [settingsModalVisible, setSettingsModalVisible] = useState(false);
+
+
+    const closeAboutModal = () => {
+        setAboutModalVisible(false);
+      };
+
+      const closeSettingsModal = () => {
+        setSettingsModalVisible(false);
+      };
+    
 
     return (
         <View style={styles.container}>
@@ -14,17 +29,21 @@ const Home = () => {
                 <Text style={styles.btnTxt}>Quiz</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.btn}>
+            <TouchableOpacity style={styles.btn} onPress={() => setAboutModalVisible(true)}>
                 <Text style={styles.btnTxt}>About us</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.btn}>
+            <TouchableOpacity style={styles.btn} onPress={() => setSettingsModalVisible(true)}>
                 <Text style={styles.btnTxt}>Settings</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.btn}>
+            <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('ScoreboardScreen')}>
                 <Text style={styles.btnTxt}>Scoreboard</Text>
             </TouchableOpacity>
+
+            <AboutModal visible={aboutModalVisible} onClose={closeAboutModal}/>
+            <SettingsModal visible={settingsModalVisible} onClose={closeSettingsModal}/>
+
         </View>
     )
 };

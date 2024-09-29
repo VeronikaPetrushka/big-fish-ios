@@ -1,22 +1,22 @@
 import React from 'react';
 import { SafeAreaView, TouchableOpacity, StyleSheet, Text, View } from "react-native";
-// import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import Icons from './Icons';
 
 const MenuPanel = () => {
-    // const navigation = useNavigation();
+    const navigation = useNavigation();
 
-    // const handleNavigateToQuizMode = () => {
-    //     navigation.navigate('QuizModeScreen');
-    // };
+    const handleNavigateToHome = () => {
+        navigation.navigate('HomeScreen');
+    };
 
-    // const handleNavigateToFight = () => {
-    //     navigation.navigate('FightScreen');
-    // };
+    const handleNavigateToDiary = () => {
+        navigation.navigate('DiaryScreen');
+    };
 
-    // const handleNavigateToStories = () => {
-    //     navigation.navigate('LibraryScreen');
-    // };
+    const handleNavigateToCalendar = () => {
+        navigation.navigate('CalendarScreen');
+    };
 
     // const handleNavigateToStickers = () => {
     //     navigation.navigate('StickersScreen');
@@ -30,7 +30,7 @@ const MenuPanel = () => {
         <SafeAreaView style={styles.container}>
 
             <View style={styles.btnContainer}>
-            <TouchableOpacity style={styles.button} onPress={''}> 
+            <TouchableOpacity style={styles.button} onPress={handleNavigateToHome}> 
                 <Icons type={'home'} />
             </TouchableOpacity>
             <Text style={styles.btnTxt}>Home</Text>
@@ -38,20 +38,20 @@ const MenuPanel = () => {
 
             <View style={styles.btnContainer}>
             <TouchableOpacity style={styles.button} onPress={''}>
-                <Icons type={'dairy'} />
+                <Icons type={'directory'} />
             </TouchableOpacity>
-            <Text style={styles.btnTxt}>Dairy</Text>
+            <Text style={styles.btnTxt}>Directory</Text>
             </View>
 
             <View style={styles.btnContainer}>
-            <TouchableOpacity style={styles.button} onPress={''}>
-                <Icons type={'store'} />
+            <TouchableOpacity style={styles.button} onPress={handleNavigateToDiary}>
+                <Icons type={'diary'} />
             </TouchableOpacity>
-            <Text style={styles.btnTxt}>Store</Text>
+            <Text style={styles.btnTxt}>Diary</Text>
             </View>
 
             <View style={styles.btnContainer}>
-            <TouchableOpacity style={styles.button} onPress={''}>
+            <TouchableOpacity style={styles.button} onPress={handleNavigateToCalendar}>
                 <Icons type={'calendar'} />
             </TouchableOpacity>
             <Text style={styles.btnTxt}>Calendar</Text>
