@@ -1,18 +1,23 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Animated, Share } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 import quiz from '../constants/quiz.js';
 import Icons from './Icons.jsx';
 import HintModal from './HintModal.jsx';
 import StoreModal from './QuizStoreModal.jsx';
 
 const Quiz = ({ timer, responses }) => {
+    const navigation = useNavigation();
+
     const [currentTopicIndex, setCurrentTopicIndex] = useState(0);
     const [currentQuestionIndexInTopic, setCurrentQuestionIndexInTopic] = useState(0);
     const [globalQuestionIndex, setGlobalQuestionIndex] = useState(0);
     const [selectedOption, setSelectedOption] = useState(null);
     const [correctOption, setCorrectOption] = useState(null);
+    const [totalScore, setTotalScore] = useState(0); 
     const [score, setScore] = useState(0);
+    const [correctAnswers, setCorrectAnswers] = useState(0);
 
     const [remainingTime, setRemainingTime] = useState(300);
     const [timerActive, setTimerActive] = useState(false);
@@ -58,7 +63,7 @@ const Quiz = ({ timer, responses }) => {
     }, [timer]);
 
     useEffect(() => {
-        if (timer === 'Yes' && remainingTime > 0) {
+        if (timer === 'Yes' && remainingTime > 0 && globalQuestionIndex < totalQuestions) {
             progress.setValue(remainingTime / 300);
             
             const timerInterval = setInterval(() => {
@@ -66,10 +71,12 @@ const Quiz = ({ timer, responses }) => {
             }, 1000);
     
             return () => clearInterval(timerInterval);
-        } else if (remainingTime === 0) {
-            console.log('Time is up! Your score:', score);
+        } else if (remainingTime === 0 || globalQuestionIndex >= totalQuestions) {
+            console.log('Time is up or quiz completed! Your score:', score);
+            setTimerActive(false);
         }
-    }, [remainingTime]);
+    }, [remainingTime, globalQuestionIndex]);
+    
     
     
 
@@ -104,8 +111,8 @@ const Quiz = ({ timer, responses }) => {
     
     const updateTotalScore = async (newScore) => {
         try {
-            const updatedScore = score + newScore;
-            setScore(updatedScore);
+            const updatedScore = totalScore + newScore;
+            setTotalScore(updatedScore);
             await AsyncStorage.setItem('totalScore', updatedScore.toString());
             console.log('totalScore: ', updatedScore)
         } catch (e) {
@@ -121,7 +128,7 @@ const Quiz = ({ timer, responses }) => {
             setCorrectOption(option);
             const newScore = score + 100;
             setScore(newScore);
-    
+            setCorrectAnswers(correctAnswers + 1);
             updateTotalScore(100);
         } else {
             setCorrectOption(selectedResponses.find(o => o.correct));
@@ -194,13 +201,46 @@ const Quiz = ({ timer, responses }) => {
         }
         setStoreModalVisible(!storeModalVisible);
     };
+
+    const handleTryAgain = () => {
+        setCurrentTopicIndex(0);
+        setCurrentQuestionIndexInTopic(0);
+        setGlobalQuestionIndex(0);
+        setSelectedOption(null);
+        setCorrectOption(null);
+        setScore(0);
+        setCorrectAnswers(0);
+        setRemainingTime(300);
+    };
+
+    const handleShare = async () => {
+        try {
+            await Share.share({
+                message: `I scored ${score} points and got ${correctAnswers} out of ${totalQuestions} correct in the quiz!`,
+            });
+        } catch (error) {
+            console.error('Failed to share quiz result:', error);
+        }
+    };
     
     
 
     if (globalQuestionIndex >= totalQuestions || remainingTime === 0) {
         return (
             <View style={styles.container}>
-                <Text style={styles.finishText}>Quiz completed! Your score: {score}</Text>
+                <Text style={styles.finishText}>Quiz completed!</Text>
+                <Text style={styles.statsText}>Your Total Score: {totalScore}</Text>
+                <Text style={styles.statsText}>Correct Answers: {correctAnswers} / {totalQuestions}</Text>
+                <Text style={styles.statsText}>Final Score: {score}</Text>
+                <TouchableOpacity style={styles.tryAgainButton} onPress={handleTryAgain}>
+                    <Text style={styles.tryAgainButtonText}>Try Again</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.shareButton} onPress={handleShare}>
+                    <Text style={styles.shareButtonText}>Share Score</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.shareButton} onPress={() => navigation.navigate('HomeScreen')}>
+                    <Text style={styles.shareButtonText}>Menu</Text>
+                </TouchableOpacity>
             </View>
         );
     }
@@ -448,7 +488,35 @@ const styles = StyleSheet.create({
     hintBtn: {
         width: 60,
         height: 60,
-    }
+    },
+    statsText: {
+        fontSize: 18,
+        textAlign: 'center',
+        marginVertical: 10,
+    },
+    tryAgainButton: {
+        backgroundColor: '#76c893',
+        padding: 10,
+        marginVertical: 10,
+        borderRadius: 5,
+        width: '100%'
+    },
+    tryAgainButtonText: {
+        fontSize: 16,
+        textAlign: 'center',
+        color: 'white',
+    },
+    shareButton: {
+        backgroundColor: '#F4845F',
+        padding: 10,
+        borderRadius: 5,
+        width: '100%'
+    },
+    shareButtonText: {
+        fontSize: 16,
+        textAlign: 'center',
+        color: 'white',
+    },
 });
 
 export default Quiz;
