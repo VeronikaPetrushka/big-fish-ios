@@ -206,6 +206,11 @@ const Quiz = ({ timer, responses, mode }) => {
 
             setCorrectOption(currentQuestion.correctAnswer);
             setHintsUsedInTopic(hintsUsedInTopic + 1);
+
+            setTimeout(() => {
+                handleNextQuestion();
+            }, 1000);
+            
         } else {
             if (hintsUsedInTopic < 2) {
                 const wrongOptions = currentOptions.filter(option => !option.correct);
