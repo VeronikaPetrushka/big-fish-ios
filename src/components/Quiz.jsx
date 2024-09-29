@@ -3,11 +3,12 @@ import { View, Text, TouchableOpacity, StyleSheet, Animated, Share } from 'react
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import quiz from '../constants/quiz.js';
+import easyQuiz from '../constants/easyQuiz.js';
 import Icons from './Icons.jsx';
 import HintModal from './HintModal.jsx';
 import StoreModal from './QuizStoreModal.jsx';
 
-const Quiz = ({ timer, responses }) => {
+const Quiz = ({ timer, responses, mode }) => {
     const navigation = useNavigation();
 
     const [currentTopicIndex, setCurrentTopicIndex] = useState(0);
@@ -30,9 +31,11 @@ const Quiz = ({ timer, responses }) => {
     const [currentOptions, setCurrentOptions] = useState([]);
     const [hintsUsedInTopic, setHintsUsedInTopic] = useState(0);
     
-    const currentTopic = quiz[currentTopicIndex];
+    const currentQuiz = mode === "Easy" ? easyQuiz : quiz[currentTopicIndex];
     
-    const totalQuestions = quiz.reduce((sum, topic) => sum + topic.questions.length, 0);
+    const totalQuestions = mode === "Easy" 
+        ? easyQuiz.length 
+        : quiz.reduce((sum, topic) => sum + topic.questions.length, 0);
 
     const retrieveUseTimeAmount = async () => {
         try {
@@ -77,15 +80,14 @@ const Quiz = ({ timer, responses }) => {
             setTimerActive(false);
         }
     }, [remainingTime, globalQuestionIndex]);
-    
-    
-    
 
-    if (!currentTopic) {
+    if (!currentQuiz) {
         return <Text style={styles.errorText}>No more topics available!</Text>;
     }
 
-    const currentQuestion = currentTopic.questions[currentQuestionIndexInTopic];
+    const currentQuestion = mode === "Easy" 
+        ? currentQuiz[globalQuestionIndex]
+        : currentQuiz.questions[currentQuestionIndexInTopic];
 
     if (!currentQuestion) {
         return <Text style={styles.errorText}>No more questions available!</Text>;
@@ -109,7 +111,6 @@ const Quiz = ({ timer, responses }) => {
     }, [hintModalVisible]);
     
     
-    
     const updateTotalScore = async (newScore) => {
         try {
             const updatedScore = totalScore + newScore;
@@ -121,43 +122,69 @@ const Quiz = ({ timer, responses }) => {
         }
     };
 
-    const selectedResponses = responses === 4 ? currentQuestion.options : currentQuestion.allOptions;
+    const selectedResponses = mode === "Easy" 
+    ? currentQuestion.answers 
+    : responses === 4 ? currentQuestion.options : currentQuestion.allOptions;
 
     const handleOptionPress = (option) => {
         setSelectedOption(option);
-        if (option.correct) {
-            setCorrectOption(option);
-            const newScore = score + 100;
-            setScore(newScore);
-            setCorrectAnswers(correctAnswers + 1);
-            updateTotalScore(100);
-        } else {
-            setCorrectOption(selectedResponses.find(o => o.correct));
-        }
+        
+        if (mode === "Easy") {
+            if (option === currentQuestion.correctAnswer) {
+                setCorrectOption(option);
+                const newScore = score + 100;
+                setScore(newScore);
+                setCorrectAnswers(correctAnswers + 1);
+                updateTotalScore(100);
+            } else {
+                setCorrectOption(currentQuestion.correctAnswer);
+            }
 
-        setTimeout(() => {
-            handleNextQuestion();
-        }, 1000);
+            setTimeout(() => {
+                handleNextQuestion();
+            }, 1000);
+        } else {
+            if (option.correct) {
+                setCorrectOption(option);
+                const newScore = score + 100;
+                setScore(newScore);
+                setCorrectAnswers(correctAnswers + 1);
+                updateTotalScore(100);
+            } else {
+                setCorrectOption(selectedResponses.find(o => o.correct));
+            }
+
+            setTimeout(() => {
+                handleNextQuestion();
+            }, 1000);
+        }
     };
 
-    const handleNextQuestion = () => {
-        const isLastQuestionInTopic = currentQuestionIndexInTopic >= currentTopic.questions.length - 1;
-        const isLastTopic = currentTopicIndex >= quiz.length - 1;
 
+    const handleNextQuestion = () => {
+        const isLastQuestionInTopic = mode === "Easy" 
+            ? globalQuestionIndex >= totalQuestions - 1 
+            : currentQuestionIndexInTopic >= currentQuiz.questions.length - 1;
+        
         if (globalQuestionIndex + 1 >= totalQuestions) {
             console.log('Quiz completed! Your score:', score);
         } else if (isLastQuestionInTopic) {
-            setCurrentTopicIndex(currentTopicIndex + 1);
-            setCurrentQuestionIndexInTopic(0);
-            setHintsUsedInTopic(0);
+            if (mode !== "Easy") {
+                setCurrentTopicIndex(currentTopicIndex + 1);
+                setCurrentQuestionIndexInTopic(0);
+                setHintsUsedInTopic(0);
+            }
         } else {
-            setCurrentQuestionIndexInTopic(currentQuestionIndexInTopic + 1);
+            if (mode !== "Easy") {
+                setCurrentQuestionIndexInTopic(currentQuestionIndexInTopic + 1);
+            }
         }
 
         setGlobalQuestionIndex(globalQuestionIndex + 1);
         setSelectedOption(null);
         setCorrectOption(null);
     };
+
 
     const handleSkipQuestion = () => {
         handleNextQuestion();
@@ -174,18 +201,24 @@ const Quiz = ({ timer, responses }) => {
     }, [currentQuestion]);
 
     const removeWrongOptions = () => {
-        if (hintsUsedInTopic < 2) {
-            const wrongOptions = currentOptions.filter(option => !option.correct);
-            if (wrongOptions.length > 0) {
-                const shuffledWrongOptions = wrongOptions.sort(() => 0.5 - Math.random()).slice(0, 2);
-                setCurrentOptions(prevOptions => prevOptions.filter(option => !shuffledWrongOptions.includes(option)));
-                setHintsUsedInTopic(hintsUsedInTopic + 1);
-            }
+        if (mode === "Easy") {
+            if (selectedOption !== null) return;
+
+            setCorrectOption(currentQuestion.correctAnswer);
+            setHintsUsedInTopic(hintsUsedInTopic + 1);
         } else {
-            alert("You have already used the maximum number of hints for this topic.");
+            if (hintsUsedInTopic < 2) {
+                const wrongOptions = currentOptions.filter(option => !option.correct);
+                if (wrongOptions.length > 0) {
+                    const shuffledWrongOptions = wrongOptions.sort(() => 0.5 - Math.random()).slice(0, 2);
+                    setCurrentOptions(prevOptions => prevOptions.filter(option => !shuffledWrongOptions.includes(option)));
+                    setHintsUsedInTopic(hintsUsedInTopic + 1);
+                }
+            } else {
+                alert("You have already used the maximum number of hints for this topic.");
+            }
         }
     };
-    
     
 
     const handleHintModalVisible = async () => {
@@ -219,6 +252,8 @@ const Quiz = ({ timer, responses }) => {
         setScore(0);
         setCorrectAnswers(0);
         setRemainingTime(300);
+        setTimerActive(false);
+        progress.setValue(1);
     };
 
     const handleShare = async () => {
@@ -265,7 +300,7 @@ const Quiz = ({ timer, responses }) => {
                     <Text style={styles.timerText}>{formatTime(remainingTime)}</Text>
                 </View>
             )}
-            <Text style={styles.topic}>{currentTopic.theme}</Text>
+            <Text style={styles.topic}>{currentQuiz.theme}</Text>
             <Text style={[styles.question,
             selectedResponses === currentQuestion.allOptions && timer === 'Yes' ? styles.questionTimer6 : styles.question]}>{currentQuestion.question}</Text>
             <View style={[styles.statsContainer, 
@@ -299,7 +334,7 @@ const Quiz = ({ timer, responses }) => {
                         onPress={() => handleOptionPress(option)}
                         disabled={selectedOption !== null}
                     >
-                        <Text style={styles.optionText}>{option.option}</Text>
+                        <Text style={styles.optionText}>{option.option || option}</Text>
                     </TouchableOpacity>
                 ))}
             </View>
