@@ -13,7 +13,6 @@ const CreateDiary = ({ visible, onSubmit, onClose }) => {
     const [imageUri, setImageUri] = useState('');
 
     useEffect(() => {
-        // Reset all fields when the modal opens
         if (visible) {
             setDate(new Date());
             setTime('Morning');

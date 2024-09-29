@@ -3,7 +3,7 @@ import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icons from './Icons';
 
-const HintModal = ({ visible, onClose, onUseHint }) => {
+const HintModal = ({ visible, onClose, onUseHint, onHintsUsed }) => {
     const [totalScore, setTotalScore] = useState(0);
     const [hintsAmount, setHintsAmount] = useState(0);
 
@@ -59,6 +59,7 @@ const HintModal = ({ visible, onClose, onUseHint }) => {
             }
             
             onUseHint(); 
+            onHintsUsed();
             onClose();
         }
     };

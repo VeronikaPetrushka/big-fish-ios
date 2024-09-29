@@ -28,6 +28,7 @@ const Quiz = ({ timer, responses }) => {
     const [hintModalVisible, setHintModalVisible] = useState(false);
     const [storeModalVisible, setStoreModalVisible] = useState(false);
     const [currentOptions, setCurrentOptions] = useState([]);
+    const [hintsUsedInTopic, setHintsUsedInTopic] = useState(0);
     
     const currentTopic = quiz[currentTopicIndex];
     
@@ -148,6 +149,7 @@ const Quiz = ({ timer, responses }) => {
         } else if (isLastQuestionInTopic) {
             setCurrentTopicIndex(currentTopicIndex + 1);
             setCurrentQuestionIndexInTopic(0);
+            setHintsUsedInTopic(0);
         } else {
             setCurrentQuestionIndexInTopic(currentQuestionIndexInTopic + 1);
         }
@@ -172,12 +174,18 @@ const Quiz = ({ timer, responses }) => {
     }, [currentQuestion]);
 
     const removeWrongOptions = () => {
-        const wrongOptions = currentOptions.filter(option => !option.correct);
-        if (wrongOptions.length > 0) {
-            const shuffledWrongOptions = wrongOptions.sort(() => 0.5 - Math.random()).slice(0, 2);
-            setCurrentOptions(prevOptions => prevOptions.filter(option => !shuffledWrongOptions.includes(option)));
+        if (hintsUsedInTopic < 2) {
+            const wrongOptions = currentOptions.filter(option => !option.correct);
+            if (wrongOptions.length > 0) {
+                const shuffledWrongOptions = wrongOptions.sort(() => 0.5 - Math.random()).slice(0, 2);
+                setCurrentOptions(prevOptions => prevOptions.filter(option => !shuffledWrongOptions.includes(option)));
+                setHintsUsedInTopic(hintsUsedInTopic + 1);
+            }
+        } else {
+            alert("You have already used the maximum number of hints for this topic.");
         }
     };
+    
     
 
     const handleHintModalVisible = async () => {
@@ -321,11 +329,13 @@ const Quiz = ({ timer, responses }) => {
                 visible={hintModalVisible} 
                 onClose={handleHintModalVisible}
                 onUseHint={removeWrongOptions}
+                onHintsUsed={() => setHintsUsedInTopic(hintsUsedInTopic + 1)}
                 />
             <StoreModal  
                 visible={storeModalVisible} 
                 onClose={handleStoreModalVisible}
                 onUseHint={removeWrongOptions}
+                onHintsUsed={() => setHintsUsedInTopic(hintsUsedInTopic + 1)}
                 timer={timer}
                 />
         </View>

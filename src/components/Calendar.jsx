@@ -33,7 +33,7 @@ const Calendar = () => {
     const handleAddEvent = (eventDetails) => {
         const newEvents = [...events, eventDetails];
         setEvents(newEvents);
-        saveEventsToStorage(newEvents); // Save to storage after adding
+        saveEventsToStorage(newEvents);
     };
 
     return (

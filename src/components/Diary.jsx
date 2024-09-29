@@ -14,7 +14,7 @@ const Diary = () => {
                 if (storedEntries) {
                     const entries = JSON.parse(storedEntries).map(entry => ({
                         ...entry,
-                        date: new Date(entry.date), // Convert the date string back to a Date object
+                        date: new Date(entry.date),
                     }));
                     setDiaryEntries(entries);
                 }
@@ -28,10 +28,9 @@ const Diary = () => {
 
     const saveDiaryEntriesToStorage = async (entries) => {
         try {
-            // Convert the date back to string when saving
             const entriesWithDateAsString = entries.map(entry => ({
                 ...entry,
-                date: entry.date.toISOString(), // Convert Date object to ISO string
+                date: entry.date.toISOString(),
             }));
             await AsyncStorage.setItem('diaryEntries', JSON.stringify(entriesWithDateAsString));
         } catch (error) {

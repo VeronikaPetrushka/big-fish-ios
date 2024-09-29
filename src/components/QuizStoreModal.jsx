@@ -3,7 +3,7 @@ import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icons from './Icons';
 
-const StoreModal = ({ visible, onClose, onUseHint, timer }) => {
+const StoreModal = ({ visible, onClose, onUseHint, onHintsUsed, timer }) => {
     const [hintsAmount, setHintsAmount] = useState(0);
     const [timeAmount, setTimeAmount] = useState(0);
     const [useTimeAmount, setUseTimeAmount] = useState(0);
@@ -68,6 +68,7 @@ const StoreModal = ({ visible, onClose, onUseHint, timer }) => {
             }
             
             onUseHint(); 
+            onHintsUsed();
             onClose();
         }
     };
