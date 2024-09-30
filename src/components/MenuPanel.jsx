@@ -10,6 +10,10 @@ const MenuPanel = () => {
         navigation.navigate('HomeScreen');
     };
 
+    const handleNavigateToDirectory = () => {
+        navigation.navigate('DirectoryScreen');
+    };
+
     const handleNavigateToDiary = () => {
         navigation.navigate('DiaryScreen');
     };
@@ -17,10 +21,6 @@ const MenuPanel = () => {
     const handleNavigateToCalendar = () => {
         navigation.navigate('CalendarScreen');
     };
-
-    // const handleNavigateToStickers = () => {
-    //     navigation.navigate('StickersScreen');
-    // };
 
     // const handleNavigateToLeaders = () => {
     //     navigation.navigate('LeaderboardScreen');
@@ -37,7 +37,7 @@ const MenuPanel = () => {
             </View>
 
             <View style={styles.btnContainer}>
-            <TouchableOpacity style={styles.button} onPress={''}>
+            <TouchableOpacity style={styles.button} onPress={handleNavigateToDirectory}>
                 <Icons type={'directory'} />
             </TouchableOpacity>
             <Text style={styles.btnTxt}>Directory</Text>

@@ -8,6 +8,9 @@ import QuizScreen from './src/screens/QuizScreen.jsx';
 import ScoreboardScreen from './src/screens/ScoreboardScreen.jsx'
 import DiaryScreen from './src/screens/DiaryScreen.jsx';
 import CalendarScreen from './src/screens/CalendarScreen.jsx';
+import DirectoryScreen from './src/screens/DirectoryScreen.jsx';
+import CharacteristicScreen from './src/screens/CharacteristicScreen.jsx';
+import TaxonomyScreen from './src/screens/TaxonomyScreen.jsx';
 import MusicPlayer from './src/components/MusicPlayer';
 import { MusicProvider } from './src/constants/context.js';
 
@@ -50,6 +53,21 @@ const App = () => {
                         <Stack.Screen 
                             name="CalendarScreen" 
                             component={CalendarScreen} 
+                            options={{ headerShown: false }} 
+                        />
+                        <Stack.Screen 
+                            name="DirectoryScreen" 
+                            component={DirectoryScreen} 
+                            options={{ headerShown: false }} 
+                        />
+                        <Stack.Screen 
+                            name="CharacteristicScreen" 
+                            component={CharacteristicScreen} 
+                            options={{ headerShown: false }} 
+                        />
+                        <Stack.Screen 
+                            name="TaxonomyScreen" 
+                            component={TaxonomyScreen} 
                             options={{ headerShown: false }} 
                         />
                     </Stack.Navigator>

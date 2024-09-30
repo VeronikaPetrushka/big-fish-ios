@@ -49,6 +49,12 @@ const Icons = ({ type }) => {
     case 'time':
       imageSource = require('../assets/quiz/clock.png');
       break;
+    case 'fish-1':
+      imageSource = require('../assets/directory/fish.png');
+      break;
+    case 'fish-2':
+      imageSource = require('../assets/directory/fish2.png');
+      break;
   }
 
   return (
