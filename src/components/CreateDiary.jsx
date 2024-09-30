@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ScrollView, Image, Modal } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, ScrollView, Image, Modal, Alert, TouchableOpacity } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import RNPickerSelect from 'react-native-picker-select';
 import { launchImageLibrary } from 'react-native-image-picker';
@@ -12,6 +12,13 @@ const CreateDiary = ({ visible, onSubmit, onClose }) => {
     const [notes, setNotes] = useState('');
     const [imageUri, setImageUri] = useState('');
 
+    const [errors, setErrors] = useState({
+        fishingPlace: '',
+        imageUri: '',
+        time: '',
+        weather: '',
+    });
+
     useEffect(() => {
         if (visible) {
             setDate(new Date());
@@ -20,6 +27,7 @@ const CreateDiary = ({ visible, onSubmit, onClose }) => {
             setWeather('Clear');
             setNotes('');
             setImageUri('');
+            setErrors({ fishingPlace: '', imageUri: '', time: '', weather: '' });
         }
     }, [visible]);
 
@@ -53,16 +61,48 @@ const CreateDiary = ({ visible, onSubmit, onClose }) => {
         });
     };
 
+    const validateForm = () => {
+        let valid = true;
+        const newErrors = {};
+
+        if (fishingPlace.length < 2 || fishingPlace.length > 30) {
+            newErrors.fishingPlace = 'Fishing place must be between 2 and 30 characters';
+            valid = false;
+        }
+
+        if (!imageUri) {
+            newErrors.imageUri = 'An image is required';
+            valid = false;
+        }
+
+        if (!time) {
+            newErrors.time = 'Time is required';
+            valid = false;
+        }
+
+        if (!weather) {
+            newErrors.weather = 'Weather is required';
+            valid = false;
+        }
+
+        setErrors(newErrors);
+        return valid;
+    };
+
     const handleSubmit = () => {
-        const entry = {
-            date,
-            time,
-            fishingPlace,
-            weather,
-            notes,
-            imageUri,
-        };
-        onSubmit(entry);
+        if (validateForm()) {
+            const entry = {
+                date,
+                time,
+                fishingPlace,
+                weather,
+                notes,
+                imageUri,
+            };
+            onSubmit(entry);
+        } else {
+            Alert.alert('Validation Error', 'Please correct the errors before submitting.');
+        }
     };
 
     return (
@@ -75,15 +115,30 @@ const CreateDiary = ({ visible, onSubmit, onClose }) => {
             <View style={styles.modalContainer}>
                 <View style={styles.modalContent}>
                     <ScrollView style={styles.modalScroll}>
-                        <Text style={styles.label}>Date:</Text>
-                        <DateTimePicker
+                        <Text style={styles.title}>Create Diary</Text>
+                        <TouchableOpacity style={styles.uploadBtn} onPress={handleUploadPhoto}>
+                            <Text style={styles.btnText}>Upload Photo</Text>
+                        </TouchableOpacity>
+                        {errors.imageUri ? <Text style={styles.error}>{errors.imageUri}</Text> : null}
+
+                        {imageUri ? <Image source={{ uri: imageUri }} style={styles.image} /> : null}
+
+                        <View style={styles.dateContainer}>
+                            <Text style={styles.label}>Date:</Text>
+                            <DateTimePicker
                             value={date}
                             mode="date"
                             display="default"
                             onChange={handleDateChange}
-                        />
+                            />
+
+                        </View>
+
+                        <View style={styles.pickerContainer}>
                         <Text style={styles.label}>Time:</Text>
+                        <View style={styles.pickerWrapper}>
                         <RNPickerSelect
+                            style={pickerSelectStyles}
                             onValueChange={handleTimeChange}
                             items={[
                                 { label: 'Morning', value: 'Morning' },
@@ -92,6 +147,10 @@ const CreateDiary = ({ visible, onSubmit, onClose }) => {
                                 { label: 'Night', value: 'Night' },
                             ]}
                         />
+                        </View>
+                        </View>
+                        {errors.time ? <Text style={styles.error}>{errors.time}</Text> : null}
+
                         <Text style={styles.label}>Fishing Place:</Text>
                         <TextInput
                             style={styles.input}
@@ -99,8 +158,13 @@ const CreateDiary = ({ visible, onSubmit, onClose }) => {
                             onChangeText={setFishingPlace}
                             placeholder="Enter fishing place"
                         />
+                        {errors.fishingPlace ? <Text style={styles.error}>{errors.fishingPlace}</Text> : null}
+
+                        <View style={styles.pickerContainer}>
                         <Text style={styles.label}>Weather:</Text>
+                        <View style={styles.pickerWrapper}>
                         <RNPickerSelect
+                            style={pickerSelectStyles}
                             onValueChange={handleWeatherChange}
                             items={[
                                 { label: 'Clear', value: 'Clear' },
@@ -109,6 +173,10 @@ const CreateDiary = ({ visible, onSubmit, onClose }) => {
                                 { label: 'Snow', value: 'Snow' },
                             ]}
                         />
+                        </View>
+                        </View>
+                        {errors.weather ? <Text style={styles.error}>{errors.weather}</Text> : null}
+
                         <Text style={styles.label}>Notes:</Text>
                         <TextInput
                             style={styles.textArea}
@@ -118,19 +186,20 @@ const CreateDiary = ({ visible, onSubmit, onClose }) => {
                             numberOfLines={4}
                             placeholder="Enter your notes here"
                         />
-                        <Button title="Upload Photo" onPress={handleUploadPhoto} />
-                        {imageUri ? (
-                            <Image source={{ uri: imageUri }} style={styles.image} />
-                        ) : null}
-                        <Button title="Submit" onPress={handleSubmit} />
-                        <Button title="Cancel" onPress={onClose} />
+
+                        <TouchableOpacity style={styles.uploadBtn} onPress={handleSubmit}>
+                            <Text style={styles.btnText}>Submit</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={styles.cancelBtn} onPress={onClose}>
+                            <Text style={styles.btnText}>Cancel</Text>
+                        </TouchableOpacity>
                     </ScrollView>
                 </View>
             </View>
         </Modal>
     );
 };
-
 
 const styles = StyleSheet.create({
     modalContainer: {
@@ -141,9 +210,9 @@ const styles = StyleSheet.create({
     },
     modalContent: {
         width: '90%',
-        height: '80%',
+        height: '75%',
         padding: 20,
-        paddingTop: 30,
+        paddingTop: 25,
         backgroundColor: 'white',
         borderRadius: 15,
         alignItems: 'center',
@@ -152,24 +221,53 @@ const styles = StyleSheet.create({
     modalScroll: {
         width: '100%'
     },
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#284c61',
+        textAlign: 'center'
+    },
     label: {
-        fontSize: 16,
-        marginVertical: 10,
+        fontSize: 18,
+        color: '#284c61',
+    },
+    dateContainer: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        marginTop: 30
+    },
+    pickerContainer: {
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        marginTop: 15,
+        marginBottom: 15
+    },
+    pickerWrapper: {
+        width: '100%',
+        marginTop: 10
     },
     input: {
         height: 40,
-        borderColor: 'gray',
+        borderColor: '#284c61',
         borderWidth: 1,
         paddingHorizontal: 10,
         borderRadius: 5,
+        marginBottom: 5,
+        color: '#284c61',
+        marginTop: 10,
+        fontSize: 17,
     },
     textArea: {
         height: 80,
-        borderColor: 'gray',
+        borderColor: '#284c61',
         borderWidth: 1,
-        paddingHorizontal: 10,
+        padding: 10,
         borderRadius: 5,
         textAlignVertical: 'top',
+        color: '#284c61',
+        marginTop: 10,
+        fontSize: 17,
     },
     image: {
         width: '100%',
@@ -177,6 +275,48 @@ const styles = StyleSheet.create({
         marginTop: 16,
         borderRadius: 8,
     },
+    error: {
+        color: 'red',
+        fontSize: 14,
+    },
+    uploadBtn: {
+        width: '100%',
+        padding: 15,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom: 5,
+        borderRadius: 10,
+        backgroundColor: '#284c61',
+        marginTop: 20
+    },
+    cancelBtn: {
+        width: '100%',
+        padding: 15,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 10,
+        backgroundColor: '#407a9c',
+        marginTop: 5
+    },
+    btnText: {
+        color: 'white',
+        fontSize: 17,
+        fontWeight: '600'
+    }
 });
+
+const pickerSelectStyles = {
+    inputIOS: {
+        fontSize: 17,
+        paddingVertical: 8,
+        paddingHorizontal: 10,
+        borderWidth: 1,
+        borderColor: '#284c61',
+        borderRadius: 5,
+        color: '#284c61',
+        width: '100%'
+    },
+};
+
 
 export default CreateDiary;

@@ -79,28 +79,31 @@ const styles = StyleSheet.create({
     height: height,
     justifyContent: 'flex-start',
     alignItems: 'center',
+    backgroundColor: '#c1e5fa',
   },
   page: {
     width: width - 40,
-    height: 690,
+    height: 630,
     padding: 20,
     backgroundColor: '#fff',
     borderRadius: 10,
     elevation: 5,
-    marginTop: 20,
-    justifyContent: 'center'
+    marginTop: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
-    textAlign: 'center'
+    textAlign: 'center',
+    color: '#284c61',
   },
   imgContainer: {
     width: '100%',
     height: 300,
     marginTop: 10,
-    marginBottom: 30
+    marginBottom: 20
   },
   image: {
     width: '100%',
@@ -112,10 +115,11 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginTop: 10,
     marginBottom: 5,
+    color: '#284c61',
   },
   text: {
     fontSize: 18,
-    color: '#333',
+    color: '#284c61',
   },
 });
 

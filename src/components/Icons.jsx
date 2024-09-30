@@ -55,6 +55,16 @@ const Icons = ({ type }) => {
     case 'fish-2':
       imageSource = require('../assets/directory/fish2.png');
       break;
+    case 'trash':
+      imageSource = require('../assets/others/trash-bin.png');
+      break;
+    case 'back':
+      imageSource = require('../assets/others/previous.png');
+      iconStyle = styles.closeIcon;
+      break;
+    case 'info':
+      imageSource = require('../assets/others/info.png');
+      break;
   }
 
   return (

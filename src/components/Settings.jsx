@@ -70,6 +70,8 @@ const SettingsModal = ({ visible, onClose }) => {
     const handleReset = async () => {
         try {
             await AsyncStorage.removeItem('totalScore');
+            await AsyncStorage.removeItem('diaryEntries');
+            await AsyncStorage.removeItem('calendarEvents');
 
             setTotalBalance(0);
             setShowResetConfirmation(false);
@@ -100,7 +102,7 @@ const SettingsModal = ({ visible, onClose }) => {
                     {showResetConfirmation ? (
                         <>
                             <Text style={styles.confirmationText}>
-                                Are you sure you want to reset your progress? It will reset your score!
+                                Are you sure you want to reset your progress? It will reset your score, diaries, and calendar events!
                             </Text>
                             <TouchableOpacity style={styles.resetBtn} onPress={handleReset}>
                                 <Text style={styles.btnText}>Reset</Text>

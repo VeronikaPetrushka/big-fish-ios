@@ -8,9 +8,9 @@ const Directory = () => {
     return(
         <View style={styles.container}>
             <Text style={styles.title}>Directory</Text>
-            {/* <View style={styles.imgContainer}>
-                <Image source={require('../assets/background/directory.png')} style={styles.image}/>
-            </View> */}
+            <View style={styles.imgContainer}>
+                <Image source={require('../assets/directory/directory.png')} style={styles.image}/>
+            </View>
             <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('CharacteristicScreen')}>
                 <Text style={styles.btnText}>General characteristics</Text>
                 <View style={styles.icon}>
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
         padding: 20,
         paddingTop: 50,
         width: '100%',
-        height: '100%',
+        height: '110%',
         backgroundColor: '#c1e5fa',
         alignItems: 'center',
         justifyContent: 'flex-start',

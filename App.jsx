@@ -11,6 +11,7 @@ import CalendarScreen from './src/screens/CalendarScreen.jsx';
 import DirectoryScreen from './src/screens/DirectoryScreen.jsx';
 import CharacteristicScreen from './src/screens/CharacteristicScreen.jsx';
 import TaxonomyScreen from './src/screens/TaxonomyScreen.jsx';
+import RecipesScreen from './src/screens/RecipesScreen.jsx';
 import MusicPlayer from './src/components/MusicPlayer';
 import { MusicProvider } from './src/constants/context.js';
 
@@ -68,6 +69,11 @@ const App = () => {
                         <Stack.Screen 
                             name="TaxonomyScreen" 
                             component={TaxonomyScreen} 
+                            options={{ headerShown: false }} 
+                        />
+                        <Stack.Screen 
+                            name="RecipesScreen" 
+                            component={RecipesScreen} 
                             options={{ headerShown: false }} 
                         />
                     </Stack.Navigator>

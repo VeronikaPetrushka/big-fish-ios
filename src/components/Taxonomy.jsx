@@ -84,6 +84,7 @@ const styles = StyleSheet.create({
     height: height,
     justifyContent: 'flex-start',
     alignItems: 'center',
+    backgroundColor: '#c1e5fa',
   },
   page: {
     width: width - 40,
@@ -98,11 +99,12 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
-    textAlign: 'center'
+    textAlign: 'center',
+    color: '#284c61',
   },
   image: {
     width: '100%',
-    height: 200,
+    height: 250,
     resizeMode: 'contain',
     marginBottom: 20,
     marginTop: 10
@@ -112,10 +114,11 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginTop: 10,
     marginBottom: 5,
+    color: '#284c61',
   },
   text: {
     fontSize: 18,
-    color: '#333',
+    color: '#284c61',
     marginBottom: 10,
   },
 });

@@ -22,9 +22,9 @@ const MenuPanel = () => {
         navigation.navigate('CalendarScreen');
     };
 
-    // const handleNavigateToLeaders = () => {
-    //     navigation.navigate('LeaderboardScreen');
-    // };
+    const handleNavigateToRecipes = () => {
+        navigation.navigate('RecipesScreen');
+    };
 
     return (
         <SafeAreaView style={styles.container}>
@@ -58,7 +58,7 @@ const MenuPanel = () => {
             </View>
         
             <View style={styles.btnContainer}>
-            <TouchableOpacity style={styles.button} onPress={''}> 
+            <TouchableOpacity style={styles.button} onPress={handleNavigateToRecipes}> 
                 <Icons type={'recipes'} />
             </TouchableOpacity>
             <Text style={styles.btnTxt}>Recipes</Text>

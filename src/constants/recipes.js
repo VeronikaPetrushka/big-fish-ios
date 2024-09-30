@@ -1,0 +1,112 @@
+const recipes = [
+  {
+    title: "Baked Salmon with Lemon and Dill",
+    image: require('../assets/recipes/recipe1.png'),
+    keyword: 'Salmon',
+    ingredients: [
+      "2 salmon fillets",
+      "1 lemon (juice and sliced)",
+      "2 tbsp olive oil",
+      "Fresh dill (1 bunch)",
+      "Salt and pepper to taste",
+      "2 garlic cloves (minced)",
+    ],
+    instructions: [
+      "Preheat the oven to 200°C (400°F).",
+      "Place the salmon fillets on a baking sheet lined with foil.",
+      "Drizzle with olive oil and the juice of one lemon. Add salt, pepper, and minced garlic.",
+      "Arrange lemon slices and fresh dill on top of the fish.",
+      "Bake for 15-20 minutes until the fish is tender and flakes easily with a fork.",
+      "Serve with your favorite side dish.",
+    ],
+  },
+  {
+    title: "Pan-Fried Trout with Almonds",
+    image: require('../assets/recipes/recipe2.png'),
+    keyword: 'Trout',
+    ingredients: [
+      "2 trout fillets",
+      "50g almonds (chopped)",
+      "2 tbsp butter",
+      "1 tbsp olive oil",
+      "Juice of half a lemon",
+      "Salt and pepper to taste",
+      "Fresh parsley (for garnish)",
+    ],
+    instructions: [
+      "Heat a skillet over medium heat and add olive oil and butter.",
+      "Season the trout fillets with salt and pepper, then place them in the skillet, skin side down.",
+      "Cook for 4-5 minutes until golden brown, then flip and cook for another 2-3 minutes.",
+      "Add the chopped almonds to the skillet and cook until golden brown.",
+      "Drizzle with lemon juice and remove from heat.",
+      "Serve with almonds and a garnish of parsley.",
+    ],
+  },
+  {
+    title: "Fried Bass with Garlic Sauce",
+    image: require('../assets/recipes/recipe3.png'),
+    keyword: 'Bass',
+    ingredients: [
+      "4 bass fillets",
+      "3 garlic cloves (minced)",
+      "2 tbsp olive oil",
+      "2 tbsp lemon juice",
+      "Salt and pepper to taste",
+      "Fresh herbs (dill or parsley)",
+    ],
+    instructions: [
+      "Heat a skillet over medium heat and add olive oil.",
+      "Season the bass fillets with salt and pepper, then place them in the skillet.",
+      "Cook for 3-4 minutes on each side until golden brown.",
+      "Add minced garlic to the skillet and cook for an additional 1 minute.",
+      "Drizzle with lemon juice and remove from heat.",
+      "Serve with garlic sauce and fresh herbs.",
+    ],
+  },
+  {
+    title: "Classic Sea Bass with Tomatoes and Basil",
+    image: require('../assets/recipes/recipe4.png'),
+    keyword: 'Bass',
+    ingredients: [
+      "1 whole sea bass (cleaned and gutted)",
+      "2 tbsp olive oil",
+      "2 tomatoes (sliced)",
+      "Fresh basil (a few leaves)",
+      "Salt and pepper to taste",
+      "Lemon (sliced)",
+    ],
+    instructions: [
+      "Preheat the oven to 180°C (350°F).",
+      "Place the sea bass on a baking sheet, seasoning with salt and pepper.",
+      "Stuff the fish with tomato slices and basil leaves.",
+      "Drizzle with olive oil and top with lemon slices.",
+      "Bake for 20-25 minutes until the fish is cooked through.",
+      "Serve with a side of your choice, such as roasted vegetables.",
+    ],
+  },
+  {
+    title: "Stewed Mackerel with Vegetables",
+    image: require('../assets/recipes/recipe5.png'),
+    keyword: 'Mackerel',
+    ingredients: [
+      "2 mackerels (cleaned)",
+      "1 onion (chopped)",
+      "2 carrots (sliced)",
+      "1 tomato (diced)",
+      "2 tbsp olive oil",
+      "1 tsp paprika",
+      "Salt and pepper to taste",
+      "Lemon juice to taste",
+    ],
+    instructions: [
+      "Heat olive oil in a deep skillet and add the onion, carrots, and tomato.",
+      "Sauté the vegetables for 5 minutes until softened.",
+      "Add the mackerel, seasoning with paprika, salt, and pepper.",
+      "Cover and simmer on low heat for 15-20 minutes.",
+      "Drizzle with lemon juice before serving, and enjoy with the stewed vegetables.",
+    ],
+  }
+];
+  
+export default recipes;
+  
