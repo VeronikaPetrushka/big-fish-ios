@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
         height: 270,
         alignItems: 'center',
         justifyContent: 'center',
-        marginBottom: 70,
+        marginBottom: 30,
         borderRadius: 12,
         overflow: 'hidden'
     },
@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#284c61',
         borderRadius: 12,
-        marginTop: 20
+        marginTop: 10
     },
 
     btnTxt: {

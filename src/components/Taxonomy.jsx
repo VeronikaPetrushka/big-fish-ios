@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, Dimensions, Image, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, Dimensions, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
+import { useNavigation } from '@react-navigation/native';
+import Icons from './Icons';
 import taxonomy from '../constants/taxonomy.js';
 
 const { width, height } = Dimensions.get('window');
@@ -37,6 +39,8 @@ const Page = ({ title, image, description, classes, examples, features, details 
 };
 
 const Taxonomy = () => {
+  const navigation = useNavigation();
+
   const translateX = useSharedValue(0);
   const [pageIndex, setPageIndex] = useState(0);
 
@@ -62,7 +66,11 @@ const Taxonomy = () => {
   };
 
   return (
-    <PanGestureHandler onGestureEvent={onGestureEvent} onHandlerStateChange={onHandlerStateChange}>
+    <View style={{width: '100%', height: '100%'}}>
+            <TouchableOpacity style={styles.backIcon}  onPress={() => navigation.navigate('DirectoryScreen')}>
+                <Icons type={'back'}/>
+            </TouchableOpacity>
+            <PanGestureHandler onGestureEvent={onGestureEvent} onHandlerStateChange={onHandlerStateChange}>
       <Animated.View style={[styles.container, animatedStyle]}>
         <Page
           title={taxonomy[pageIndex].title}
@@ -75,6 +83,7 @@ const Taxonomy = () => {
         />
       </Animated.View>
     </PanGestureHandler>
+    </View>
   );
 };
 
@@ -86,14 +95,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#c1e5fa',
   },
+  backIcon: {
+    width: 60,
+    height: 60,
+    padding: 10,
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    zIndex: 10
+},
   page: {
     width: width - 40,
-    height: 630,
+    height: 570,
     padding: 20,
     backgroundColor: '#fff',
     borderRadius: 10,
     elevation: 5,
-    marginTop: 60,
+    marginTop: 70,
   },
   title: {
     fontSize: 24,

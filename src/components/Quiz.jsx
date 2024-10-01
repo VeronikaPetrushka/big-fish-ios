@@ -422,14 +422,15 @@ const styles = StyleSheet.create({
         marginBottom: 80
     },
     statsContainer6: {
-        marginBottom: 30
+        marginBottom: 15,
+        marginTop: -15
     },
     statsContainerTimer: {
-        marginBottom: 50
+        marginBottom: 30
     },
     statsContainerTimer6: {
-        marginBottom: 20,
-        marginTop: -10
+        marginBottom: 5,
+        marginTop: -15
     },
     scoreContainer: {
         flexDirection: 'row',
@@ -478,7 +479,7 @@ const styles = StyleSheet.create({
         height: 250
     },
     optionsContainer6: {
-        height: 380
+        height: 380,
     },
     option: {
         padding: 15,
@@ -515,19 +516,19 @@ const styles = StyleSheet.create({
         marginTop: 20,
         borderRadius: 8,
         alignItems: 'center',
-        marginBottom: 60
+        marginBottom: 40
     },
     skipButton6: {
-        marginBottom: 30,
+        marginBottom: 15,
         marginTop: 0,
     },
     skipButtonTimer: {
-        marginBottom: 40,
+        marginBottom: 20,
         marginTop: 10,
     },
     skipButtonTimer6: {
-        marginBottom: 25,
-        marginTop: 0,
+        marginBottom: 12,
+        marginTop: -7,
     },
     skipButtonText: {
         fontSize: 18,
