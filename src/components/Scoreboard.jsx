@@ -7,19 +7,27 @@ const Scoreboard = () => {
     const [totalScore, setTotalScore] = useState(0);
 
     const generateRandomUsers = () => {
+        const firstNames = ['John', 'Emily', 'Michael', 'Sarah', 'David', 'Jessica', 'Daniel'];
+        const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller'];
+    
         const users = [];
         for (let i = 1; i <= 7; i++) {
             const randomScore = Math.floor(Math.random() * 9001) + 1000;
             const correctAnswers = Math.floor(Math.random() * 100) + 1;
+    
+            const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+            const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+    
             users.push({
                 id: i.toString(),
-                username: `User${i}`,
+                username: `${firstName} ${lastName}`,
                 score: randomScore,
                 correctAnswers,
             });
         }
         setRandomUsers(users);
     };
+    
 
     const loadTotalScore = async () => {
         try {
@@ -40,8 +48,10 @@ const Scoreboard = () => {
     const renderItem = ({ item }) => (
         <View style={styles.userRow}>
             <Text style={styles.username}>{item.username}</Text>
+            <View style={{width: '100%', alignItems: 'center', justifyContent: 'space-between', flexDirection: 'row'}}>
             <Text style={styles.score}>Score: {item.score}</Text>
             <Text style={styles.correctAnswers}>Correct: {item.correctAnswers}/100</Text>
+            </View>
         </View>
     );
 
@@ -62,6 +72,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
+        paddingBottom: 120,
         backgroundColor: '#f5f5f5',
     },
     header: {
@@ -72,15 +83,15 @@ const styles = StyleSheet.create({
         color: '#284c61'
     },
     totalScore: {
-        fontSize: 18,
+        fontSize: 20,
         fontWeight: 'bold',
         textAlign: 'center',
         marginBottom: 10,
         color: '#284c61'
     },
     userRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'space-around',
+        alignItems: 'center',
         padding: 15,
         backgroundColor: '#fff',
         borderRadius: 8,
@@ -91,16 +102,17 @@ const styles = StyleSheet.create({
         elevation: 3,
     },
     username: {
-        fontSize: 16,
+        fontSize: 18,
         fontWeight: '500',
-        color: '#284c61'
+        color: '#284c61',
+        marginBottom: 12
     },
     score: {
-        fontSize: 16,
+        fontSize: 17,
         color: '#284c61'
     },
     correctAnswers: {
-        fontSize: 16,
+        fontSize: 17,
         color: '#284c61'
     },
 });

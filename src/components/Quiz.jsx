@@ -81,17 +81,25 @@ const Quiz = ({ timer, responses, mode }) => {
         }
     }, [remainingTime, globalQuestionIndex]);
 
-    if (!currentQuiz) {
-        return <Text style={styles.errorText}>No more topics available!</Text>;
-    }
 
     const currentQuestion = mode === "Easy" 
         ? currentQuiz[globalQuestionIndex]
         : currentQuiz.questions[currentQuestionIndexInTopic];
 
-    if (!currentQuestion) {
-        return <Text style={styles.errorText}>No more questions available!</Text>;
+    useEffect(() => {
+        setCurrentOptions(selectedResponses);
+    }, [currentQuestion]);
+
+    if (!currentQuiz || !currentQuestion) {
+        return (
+            <View style={styles.container}>
+                <Text style={styles.errorText}>
+                    { !currentQuiz ? "No more topics available!" : "No more questions available!" }
+                </Text>
+            </View>
+        );
     }
+
 
     const loadTotalScore = async () => {
         try {
@@ -196,10 +204,6 @@ const Quiz = ({ timer, responses, mode }) => {
         return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     };
 
-    useEffect(() => {
-        setCurrentOptions(selectedResponses);
-    }, [currentQuestion]);
-
     const removeWrongOptions = () => {
         if (mode === "Easy") {
             if (selectedOption !== null) return;
@@ -261,6 +265,7 @@ const Quiz = ({ timer, responses, mode }) => {
         progress.setValue(1);
     };
 
+
     const handleShare = async () => {
         try {
             await Share.share({
@@ -270,7 +275,6 @@ const Quiz = ({ timer, responses, mode }) => {
             console.error('Failed to share quiz result:', error);
         }
     };
-    
     
 
     if (globalQuestionIndex >= totalQuestions || remainingTime === 0) {
@@ -286,7 +290,7 @@ const Quiz = ({ timer, responses, mode }) => {
                 <TouchableOpacity style={styles.shareButton} onPress={handleShare}>
                     <Text style={styles.shareButtonText}>Share Score</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.shareButton} onPress={() => navigation.navigate('HomeScreen')}>
+                <TouchableOpacity style={styles.menuButton} onPress={() => navigation.navigate('HomeScreen')}>
                     <Text style={styles.shareButtonText}>Menu</Text>
                 </TouchableOpacity>
             </View>
@@ -545,8 +549,8 @@ const styles = StyleSheet.create({
         marginVertical: 10,
     },
     tryAgainButton: {
-        backgroundColor: '#76c893',
-        padding: 10,
+        backgroundColor: '#284c61',
+        padding: 12,
         marginVertical: 10,
         borderRadius: 5,
         width: '100%'
@@ -557,10 +561,17 @@ const styles = StyleSheet.create({
         color: 'white',
     },
     shareButton: {
-        backgroundColor: '#F4845F',
-        padding: 10,
+        backgroundColor: '#305b75',
+        padding: 12,
         borderRadius: 5,
         width: '100%'
+    },
+    menuButton: {
+        backgroundColor: '#203d4e',
+        padding: 12,
+        borderRadius: 5,
+        width: '100%',
+        marginTop: 20
     },
     shareButtonText: {
         fontSize: 16,
