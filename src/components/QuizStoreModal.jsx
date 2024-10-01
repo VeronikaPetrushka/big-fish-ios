@@ -330,7 +330,7 @@ const styles = StyleSheet.create({
     },
     modalContentTimer: {
         width: '90%',
-        height: '80%',
+        height: '83%',
         padding: 20,
         paddingTop: 30,
         backgroundColor: 'white',

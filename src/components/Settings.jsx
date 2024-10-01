@@ -70,6 +70,8 @@ const SettingsModal = ({ visible, onClose }) => {
     const handleReset = async () => {
         try {
             await AsyncStorage.removeItem('totalScore');
+            await AsyncStorage.removeItem('hintsAmount');
+            await AsyncStorage.removeItem('timeAmount');
             await AsyncStorage.removeItem('diaryEntries');
             await AsyncStorage.removeItem('calendarEvents');
 
