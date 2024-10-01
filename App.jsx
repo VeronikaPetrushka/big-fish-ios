@@ -23,7 +23,6 @@ const App = () => {
     return (
         <MusicProvider>
             <NavigationContainer>
-                {/* <View style={{ width: '100%', height: "100%" }}> */}
                     <MusicPlayer />
                     <Stack.Navigator initialRouteName="HomeScreen">
                         <Stack.Screen 
@@ -77,7 +76,6 @@ const App = () => {
                             options={{ headerShown: false }} 
                         />
                     </Stack.Navigator>
-                {/* </View> */}
             </NavigationContainer>
         </MusicProvider>
     );

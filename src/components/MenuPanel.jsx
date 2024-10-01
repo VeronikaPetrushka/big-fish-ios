@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, TouchableOpacity, StyleSheet, Text, View } from "react-native";
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import Icons from './Icons';
 
 const MenuPanel = () => {

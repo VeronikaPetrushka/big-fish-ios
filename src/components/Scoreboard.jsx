@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
+import Icons from './Icons';
 
 const Scoreboard = () => {
+    const navigation = useNavigation();
     const [randomUsers, setRandomUsers] = useState([]);
     const [totalScore, setTotalScore] = useState(0);
 
@@ -57,6 +60,9 @@ const Scoreboard = () => {
 
     return (
         <View style={styles.container}>
+            <TouchableOpacity style={styles.backIcon} onPress={() => navigation.navigate('HomeScreen')}>
+                <Icons type={'back'}/>
+            </TouchableOpacity>
             <Text style={styles.header}>Scoreboard</Text>
             <Text style={styles.totalScore}>Your Total Score: {totalScore}</Text>
             <FlatList
@@ -72,8 +78,17 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
+        paddingTop: 40,
         paddingBottom: 120,
-        backgroundColor: '#f5f5f5',
+        backgroundColor: '#c1e5fa',
+    },
+    backIcon: {
+        width: 60,
+        height: 60,
+        padding: 10,
+        position: 'absolute',
+        top: 10,
+        left: 20
     },
     header: {
         fontSize: 24,

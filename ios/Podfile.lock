@@ -1547,6 +1547,8 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - RNPermissions (4.1.5):
+    - React-Core
   - RNReanimated (3.15.3):
     - DoubleConversion
     - glog
@@ -1712,6 +1714,7 @@ DEPENDENCIES:
   - "RNCPicker (from `../node_modules/@react-native-picker/picker`)"
   - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
+  - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSound (from `../node_modules/react-native-sound`)
@@ -1857,6 +1860,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/datetimepicker"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
+  RNPermissions:
+    :path: "../node_modules/react-native-permissions"
   RNReanimated:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
@@ -1934,12 +1939,13 @@ SPEC CHECKSUMS:
   RNCPicker: 0b6860a6b208d4046227d2f626ad0722f99a969c
   RNDateTimePicker: 40ffda97d071a98a10fdca4fa97e3977102ccd14
   RNGestureHandler: 6dfe7692a191ee224748964127114edf057a1475
+  RNPermissions: 294531ede5a64d1528463e88fffef05675842042
   RNReanimated: c543567b3482ea54dec3216811d2360e581d35d0
   RNScreens: 19719a9c326e925498ac3b2d35c4e50fe87afc06
   RNSound: 6c156f925295bdc83e8e422e7d8b38d33bc71852
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   Yoga: 4ef80d96a5534f0e01b3055f17d1e19a9fc61b63
 
-PODFILE CHECKSUM: a37ba081cab256dcc57bd707e3f9f7770e7cb771
+PODFILE CHECKSUM: 4811ec5a15e4dc7cc180e2af6dc90f24fa9ce0d1
 
 COCOAPODS: 1.15.2

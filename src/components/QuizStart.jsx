@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { View, Image, Text, TouchableOpacity, StyleSheet } from "react-native"
 import { useNavigation } from '@react-navigation/native';
+import Icons from './Icons';
 
 const QuizStart = () => {
     const navigation = useNavigation();
@@ -22,6 +23,9 @@ const QuizStart = () => {
 
     return(
         <View style={styles.container}>
+            <TouchableOpacity style={styles.backIcon}  onPress={() => navigation.navigate('HomeScreen')}>
+                <Icons type={'back'}/>
+            </TouchableOpacity>
             <View style={styles.imageContainer}>
                 <Image style={styles.image} source={require('../assets/background/home.png')}/>
             </View>
@@ -121,6 +125,15 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         padding: 30,
         paddingTop: 80
+    },
+
+    backIcon: {
+        width: 60,
+        height: 60,
+        padding: 10,
+        position: 'absolute',
+        top: 10,
+        left: 20
     },
 
     imageContainer: {
