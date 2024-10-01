@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import CreateCalendar from './CreateCalendar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Icons from './Icons';
 
 const Calendar = () => {
     const [events, setEvents] = useState([]);
@@ -31,9 +32,19 @@ const Calendar = () => {
     };
 
     const handleAddEvent = (eventDetails) => {
-        const newEvents = [...events, eventDetails];
+        const newEvent = {
+            ...eventDetails,
+            id: events.length > 0 ? events[events.length - 1].id + 1 : 1,
+        };
+        const newEvents = [...events, newEvent];
         setEvents(newEvents);
         saveEventsToStorage(newEvents);
+    };
+
+    const handleDeleteEvent = (eventToDelete) => {
+        const updatedEvents = events.filter(event => event.id !== eventToDelete.id);
+        setEvents(updatedEvents);
+        saveEventsToStorage(updatedEvents);
     };
 
     return (
@@ -48,12 +59,18 @@ const Calendar = () => {
             />
             <Text style={styles.eventTitle}>Scheduled Events</Text>
             <ScrollView>
-                {events.map((event, index) => (
-                    <View key={index} style={styles.eventCard}>
+                {events.map((event) => (
+                    <View key={event.id} style={styles.eventCard}>
                         <Text style={styles.cardTitle}>Date: {event.date}</Text>
                         <Text style={styles.cardText}>Time: {event.time}</Text>
                         <Text style={styles.cardText}>Notes: {event.notes}</Text>
                         <Text style={styles.cardText}>Periodicity: {event.periodicity}</Text>
+                        <TouchableOpacity 
+                            style={styles.deleteBtn} 
+                            onPress={() => handleDeleteEvent(event)}
+                        >
+                            <Icons type={'trash'}/>
+                        </TouchableOpacity>
                     </View>
                 ))}
             </ScrollView>
@@ -109,7 +126,17 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 17,
         fontWeight: '600'
-    }
+    },
+    deleteBtn: {
+        padding: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 70,
+        height: 70,
+        position: 'absolute',
+        top: 40,
+        right: 20
+    },
 });
 
 export default Calendar;
