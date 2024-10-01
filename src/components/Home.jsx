@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-start',
         padding: 30,
-        paddingTop: 80
+        paddingTop: 60
     },
 
     imageContainer: {
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
         height: 270,
         alignItems: 'center',
         justifyContent: 'center',
-        marginBottom: 70,
+        marginBottom: 50,
         borderRadius: 12,
         overflow: 'hidden'
     },
