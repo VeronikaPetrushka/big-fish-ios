@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { useMusic } from '../constants/context.js';
 
 const MusicPlayer = () => {
-    const { isPlaying } = useMusic();
+    const { isPlaying, togglePlay } = useMusic();
 
     return <View />;
 };

@@ -1,51 +1,60 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import Sound from 'react-native-sound';
+import TrackPlayer, { Capability, usePlaybackState } from 'react-native-track-player';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-Sound.setCategory('Playback');
 
 const MusicContext = createContext();
 
 export const useMusic = () => useContext(MusicContext);
 
 export const MusicProvider = ({ children }) => {
-    const [sound, setSound] = useState(null);
     const [isPlaying, setIsPlaying] = useState(true);
+    const playbackState = usePlaybackState();
 
     useEffect(() => {
-        const music = new Sound('music.mp3', Sound.MAIN_BUNDLE, (error) => {
-            if (error) {
-                console.log('Failed to load sound', error);
-                return;
+        const setupPlayer = async () => {
+            try {
+                await TrackPlayer.setupPlayer();
+
+                await TrackPlayer.add({
+                    id: '1',
+                    url: require('../assets/music.mp3'),
+                    title: 'Background Music',
+                    artist: 'Artist Name',
+                });
+
+                TrackPlayer.setRepeatMode(TrackPlayer.REPEAT_MODE_TRACK);
+
+                const savedState = await AsyncStorage.getItem('toggleLoudness');
+                if (savedState !== null) {
+                    const parsedState = JSON.parse(savedState);
+                    setIsPlaying(parsedState);
+                    if (parsedState) {
+                        TrackPlayer.play();
+                    } else {
+                        TrackPlayer.pause();
+                    }
+                } else {
+                    TrackPlayer.play();
+                }
+            } catch (error) {
+                console.log('Error setting up TrackPlayer', error);
             }
-            console.log('Sound loaded successfully');
-            music.setNumberOfLoops(-1);
-            setSound(music);
-        });
+        };
+
+        setupPlayer();
 
         return () => {
-            if (sound) {
-                sound.stop(() => {
-                    sound.release();
-                });
-            }
+            TrackPlayer.destroy();
         };
     }, []);
 
     useEffect(() => {
-        if (sound) {
-            if (isPlaying) {
-                sound.play((success) => {
-                    if (!success) {
-                        console.log('Playback failed due to audio decoding errors');
-                        sound.stop();
-                    }
-                });
-            } else {
-                sound.pause();
-            }
+        if (isPlaying) {
+            TrackPlayer.play();
+        } else {
+            TrackPlayer.pause();
         }
-    }, [isPlaying, sound]);
+    }, [isPlaying]);
 
     const togglePlay = async () => {
         const newState = !isPlaying;
