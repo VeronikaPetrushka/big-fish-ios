@@ -44,7 +44,7 @@ export const MusicProvider = ({ children }) => {
         setupPlayer();
 
         return () => {
-            TrackPlayer.destroy();
+            TrackPlayer.stop();
         };
     }, []);
 

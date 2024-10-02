@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, Image, FlatList, TouchableOpacity, Modal, ScrollView, Share } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import recipes from '../constants/recipes.js';
 import Icons from './Icons.jsx';
+import CreateRecipe from './CreateRecipe.jsx';
 
 const RecipeCard = ({ title, image, onPress }) => {
   return (
@@ -20,6 +22,48 @@ const RecipeCard = ({ title, image, onPress }) => {
 const Recipes = () => {
   const [detailsModalVisible, setDetailsModalVisible] = useState(false);
   const [selectedRecipe, setSelectedRecipe] = useState(null);
+  const [addRecipeVisible, setAddRecipeVisible] = useState(false);
+  const [userRecipes, setUserRecipes] = useState([]);
+
+  useEffect(() => {
+    const loadUserRecipes = async () => {
+        try {
+            const storedRecipes = await AsyncStorage.getItem('userRecipes');
+            if (storedRecipes) {
+                setUserRecipes(JSON.parse(storedRecipes));
+            }
+        } catch (error) {
+            console.error('Failed to load recipes from storage:', error);
+        }
+    };
+
+    loadUserRecipes();
+}, []);
+
+const saveRecipesToStorage = async (userRecipes) => {
+    try {
+        await AsyncStorage.setItem('userRecipes', JSON.stringify(userRecipes));
+    } catch (error) {
+        console.error('Failed to save user recipes to storage:', error);
+    }
+};
+
+const handleAddRecipe = (recipeDetails) => {
+  const newRecipe = {
+      ...recipeDetails,
+      ingredients: recipeDetails.ingredients.split('\n'),
+      instructions: recipeDetails.instructions.split('\n'),
+      id: userRecipes.length > 0 ? userRecipes[userRecipes.length - 1].id + 1 : 1,
+  };
+  const newRecipes = [...userRecipes, newRecipe];
+  setUserRecipes(newRecipes);
+  saveRecipesToStorage(newRecipes);
+};
+
+
+  const handleAddRecipeClose = () => {
+    setAddRecipeVisible(false);
+  };
 
   const handleDetailsModalClose = () => {
     setDetailsModalVisible(false);
@@ -48,25 +92,34 @@ const Recipes = () => {
     }
   };
 
-  const renderItem = ({ item }) => (
+  const renderItem = ({ item }) => {
+    const imageSource = item.imageUri ? { uri: item.imageUri } : item.image;
+    return(
     <RecipeCard
-      title={item.title}
-      image={item.image}
+      title={item.title || item.name}
+      image={imageSource}
       onPress={() => {
         setSelectedRecipe(item);
         setDetailsModalVisible(true);
-        console.log(`Selected recipe: ${item.title}`);
+        console.log(`Selected recipe: ${item.title || item.name}`);
       }}
     />
-  );
+  )
+};
+
+
+  const combinedRecipes = [...recipes, ...userRecipes];
 
   return (
     <View style={styles.container}>
+        <TouchableOpacity style={styles.addBtn} onPress={() => setAddRecipeVisible(true)}>
+          <Icons type={'plus'}/>
+        </TouchableOpacity>
       <Text style={styles.titleMain}>Recipes</Text>
       <FlatList
-        data={recipes}
+        data={combinedRecipes}
         renderItem={renderItem}
-        keyExtractor={(item) => item.title}
+        keyExtractor={(item) => item.id ? item.id.toString() : item.title}
         contentContainerStyle={styles.list}
       />
 
@@ -105,6 +158,12 @@ const Recipes = () => {
           </View>
         </View>
       </Modal>
+
+      <CreateRecipe 
+        visible={addRecipeVisible} 
+        onClose={handleAddRecipeClose}
+        onSubmit={handleAddRecipe}
+        />
     </View>
   );
 };
@@ -117,6 +176,17 @@ const styles = StyleSheet.create({
     paddingTop: 30,
     backgroundColor: '#c1e5fa',
   },
+  addBtn: {
+    width: 60,
+    height: 60,
+    padding: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    top: 15,
+    right: 20,
+    zIndex: 10
+},
   titleMain: {
     fontSize: 30,
     fontWeight: 'bold',
