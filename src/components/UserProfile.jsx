@@ -49,7 +49,7 @@ const UserProfile = ({ visible, onClose }) => {
 
   const handleSubmit = async () => {
     if (name.length > 19) {
-      setErrorMessage("Name cannot exceed 19 character.");
+      setErrorMessage("Name cannot exceed 19 characters.");
       return;
     }
 
