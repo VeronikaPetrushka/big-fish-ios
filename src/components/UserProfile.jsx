@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, TextInput, TouchableOpacity, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, FlatList, Modal, ImageBackground } from 'react-native';
+import { View, Text, Image, TextInput, TouchableOpacity, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, FlatList, Modal } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import avatars from '../constants/avatars.js';
 import Icons from './Icons.jsx';
@@ -9,6 +9,7 @@ const UserProfile = ({ visible, onClose }) => {
   const [selectedAvatar, setSelectedAvatar] = useState(avatars[0].avatar);
   const [showAvatars, setShowAvatars] = useState(false);
   const [buttonText, setButtonText] = useState("Create account");
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -30,6 +31,8 @@ const UserProfile = ({ visible, onClose }) => {
         } else {
           setSelectedAvatar(avatars[0].avatar);
         }
+
+        setErrorMessage("");
       } catch (error) {
         console.error('Error loading user profile:', error);
       }
@@ -45,6 +48,11 @@ const UserProfile = ({ visible, onClose }) => {
   };
 
   const handleSubmit = async () => {
+    if (name.length > 17) {
+      setErrorMessage("Name cannot exceed 17 characters.");
+      return;
+    }
+
     try {
       const selectedAvatarId = avatars.find(img => img.avatar === selectedAvatar)?.id;
       await AsyncStorage.setItem('userProfile', name);
@@ -114,6 +122,9 @@ const UserProfile = ({ visible, onClose }) => {
                         onChangeText={handleNameChange}
                         style={styles.input}
                       />
+                      {errorMessage ? (
+                        <Text style={styles.errorText}>{errorMessage}</Text>
+                      ) : null}
                       <TouchableOpacity style={styles.btnCreate} onPress={handleSubmit}>
                         <Text style={styles.btnText}>{buttonText}</Text>
                       </TouchableOpacity>
@@ -127,7 +138,6 @@ const UserProfile = ({ visible, onClose }) => {
     </Modal>
   );
 };
-
 
 const styles = {
   modalContainer: {
@@ -228,12 +238,6 @@ const styles = {
     color: 'white'
   },
 
-  avatarImage: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'contain'
-  },
-
   avatarList: {
     marginTop: 20,
     height: "39%",
@@ -257,6 +261,13 @@ const styles = {
     backgroundColor: '#284c61',
     borderRadius: 10,
     marginTop: 15,
+  },
+
+  errorText: {
+    color: 'red',
+    fontSize: 14,
+    position: 'absolute',
+    top: 100
   }
 };
 

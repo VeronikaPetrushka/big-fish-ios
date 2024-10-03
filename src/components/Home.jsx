@@ -127,9 +127,7 @@ const Home = () => {
                 <View style={styles.avatarContainer}>
                     <Image source={currentAvatar} style={styles.avatar}/>
                 </View>
-                <View style={styles.nameContainer}>
                     <Text style={styles.name}>{userName || "User"}</Text>
-                </View>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('QuizStartScreen')}>
