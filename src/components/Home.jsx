@@ -1,18 +1,55 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Text, View, Image, TouchableOpacity, StyleSheet, ImageBackground} from "react-native";
+import { Text, View, TouchableOpacity, StyleSheet, ImageBackground, Image} from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
+import UserProfile from './UserProfile';
 import AboutModal from "./About";
 import SettingsModal from './Settings';
 import DailyBonus from './DailyBonus';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import avatars from '../constants/avatars.js';
 
 const Home = () => {
     const navigation = useNavigation();
+    const [userProfileModalVisible, setUserProfileModalVisible] = useState(false);
+    const [currentAvatar, setCurrentAvatar] = useState(avatars[0].avatarBack);
+    const [userName, setUserName] = useState('');  
     const [aboutModalVisible, setAboutModalVisible] = useState(false);
     const [settingsModalVisible, setSettingsModalVisible] = useState(false);
     const [dailyBonusVisible, setDailyBonusVisible] = useState(true);
     const [totalScore, setTotalScore] = useState(0);
     const [bonusAmount, setBonusAmount] = useState(100);
+
+    const loadAvatar = async () => {
+        try {
+          const storedAvatarId = await AsyncStorage.getItem('userAvatar');
+          if (storedAvatarId) {
+            const avatar = avatars.find(img => img.id === storedAvatarId);
+            setCurrentAvatar(avatar ? avatar.avatar : avatars[0].avatar);
+          }
+        } catch (error) {
+          console.error('Error loading avatar:', error);
+        }
+      };
+    
+      const loadName = async () => {
+        try {
+          const storedName = await AsyncStorage.getItem('userProfile');
+          setUserName(storedName || '');
+        } catch (error) {
+          console.error('Error loading name:', error);
+        }
+      };
+    
+      useEffect(() => {
+        loadAvatar();
+        loadName();
+      }, []);
+
+    const closeUserProfileModal = async () => {
+        setUserProfileModalVisible(false);
+        await loadAvatar();
+        await loadName();
+    };
 
     const bonuses = [100, 200, 300, 400, 500, 600, 700];
     const currentBonusIndex = useRef(0);
@@ -21,8 +58,10 @@ const Home = () => {
         setAboutModalVisible(false);
     };
 
-    const closeSettingsModal = () => {
+    const closeSettingsModal = async () => {
         setSettingsModalVisible(false);
+        await loadAvatar();
+        await loadName();
     };
 
     const closeDailyBonusModal = async () => {
@@ -84,6 +123,15 @@ const Home = () => {
       >
         <View style={styles.overlay}>
         <View style={styles.container}>
+            <TouchableOpacity style={styles.userContainer} onPress={() => setUserProfileModalVisible(true)}>
+                <View style={styles.avatarContainer}>
+                    <Image source={currentAvatar} style={styles.avatar}/>
+                </View>
+                <View style={styles.nameContainer}>
+                    <Text style={styles.name}>{userName || "User"}</Text>
+                </View>
+            </TouchableOpacity>
+
             <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('QuizStartScreen')}>
                 <Text style={styles.btnTxt}>Quiz</Text>
             </TouchableOpacity>
@@ -100,6 +148,7 @@ const Home = () => {
                 <Text style={styles.btnTxt}>Scoreboard</Text>
             </TouchableOpacity>
 
+            <UserProfile visible={userProfileModalVisible} onClose={closeUserProfileModal}/>
             <AboutModal visible={aboutModalVisible} onClose={closeAboutModal} />
             <SettingsModal visible={settingsModalVisible} onClose={closeSettingsModal} />
             <DailyBonus visible={dailyBonusVisible} onClose={closeDailyBonusModal} bonusAmount={bonusAmount} />
@@ -132,6 +181,43 @@ const styles = StyleSheet.create({
         width: '100%',
       },
 
+    userContainer: {
+        backgroundColor: '#a8cce1',
+        width: '100%',
+        height: 80,
+        alignItems: 'center',
+        flexDirection: 'row',
+        padding: 8,
+        borderRadius: 20,
+        position: 'absolute',
+        top: 60,
+        right: 30,
+        zIndex: 10
+    },
+
+    avatarContainer: {
+        width: 65,
+        height: 65,
+        alignItems: 'center',
+        borderRadius: 100,
+        backgroundColor: '#e4eff6',
+        overflow: 'hidden',
+        marginRight: 20,
+        padding: 10
+    },
+
+    avatar: {
+        width: '100%',
+        height: '100%',
+        resizeMode: 'contain'
+    },
+
+    name: {
+        fontSize: 22,
+        fontWeight: '600',
+        color: '#284c61'
+    },
+
     btn: {
         padding: 12,
         paddingHorizontal: 20,
@@ -141,7 +227,8 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         borderColor: '#a8cce1',
         borderRadius: 12,
-        marginBottom: 10
+        marginBottom: 10,
+        zIndex: 10
     },
 
     btnTxt: {

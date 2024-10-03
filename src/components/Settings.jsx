@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, View, Text, TouchableOpacity, StyleSheet, Share, Alert, Vibration } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Icons from './Icons';
 import { useMusic } from '../constants/context.js';
+import avatars from '../constants/avatars.js';
+import Icons from './Icons';
 
 const SettingsModal = ({ visible, onClose }) => {
     const { isPlaying, togglePlay } = useMusic();
@@ -67,14 +68,28 @@ const SettingsModal = ({ visible, onClose }) => {
         }
     };
 
+    const resetDailyBonus = async () => {
+        try {
+            const currentTime = Math.floor(Date.now() / 1000);
+            await AsyncStorage.setItem('lastBonusShown', currentTime.toString());
+        } catch (error) {
+            console.error('Error resetting daily bonus:', error);
+        }
+    };
+
     const handleReset = async () => {
         try {
+            await AsyncStorage.setItem('userProfile', "");
+            await AsyncStorage.setItem('userAvatar', avatars[0].id);
+
             await AsyncStorage.removeItem('totalScore');
             await AsyncStorage.removeItem('hintsAmount');
             await AsyncStorage.removeItem('timeAmount');
             await AsyncStorage.removeItem('diaryEntries');
             await AsyncStorage.removeItem('calendarEvents');
             await AsyncStorage.removeItem('userRecipes');
+
+            await resetDailyBonus();
 
             setTotalBalance(0);
             setShowResetConfirmation(false);

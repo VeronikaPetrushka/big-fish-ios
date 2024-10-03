@@ -3,7 +3,7 @@ import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icons from './Icons';
 
-const StoreModal = ({ visible, onClose, onUseHint, onHintsUsed, timer }) => {
+const StoreModal = ({ visible, onClose, onUseHint, onHintsUsed, timer, onAddTime }) => {
     const [hintsAmount, setHintsAmount] = useState(0);
     const [timeAmount, setTimeAmount] = useState(0);
     const [useTimeAmount, setUseTimeAmount] = useState(0);
@@ -77,8 +77,6 @@ const StoreModal = ({ visible, onClose, onUseHint, onHintsUsed, timer }) => {
         if (storedTimeAmount >= useTimeAmount && useTimeAmount > 0) {
             const newTimeAmount = storedTimeAmount - useTimeAmount;
             setStoredTimeAmount(newTimeAmount);
-            setTimeAmount(0);
-            setUseTimeAmount(0);
     
             try {
                 await AsyncStorage.setItem('timeAmount', newTimeAmount.toString());
@@ -86,7 +84,11 @@ const StoreModal = ({ visible, onClose, onUseHint, onHintsUsed, timer }) => {
             } catch (error) {
                 console.error('Failed to store timeAmount or useTimeAmount in storage:', error);
             }
+            onAddTime(useTimeAmount);
     
+            setTimeAmount(0);
+            setUseTimeAmount(0);
+        
             onClose();
         } else {
             alert("Not enough time available to use!");

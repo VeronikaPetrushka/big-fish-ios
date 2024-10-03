@@ -65,6 +65,9 @@ const Icons = ({ type }) => {
     case 'info':
       imageSource = require('../assets/others/info.png');
       break;
+    case 'correct':
+      imageSource = require('../assets/quiz/ok.png');
+      break;
   }
 
   return (

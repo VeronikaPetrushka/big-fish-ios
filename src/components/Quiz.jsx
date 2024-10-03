@@ -19,6 +19,7 @@ const Quiz = ({ timer, responses, mode }) => {
     const [totalScore, setTotalScore] = useState(0); 
     const [score, setScore] = useState(0);
     const [correctAnswers, setCorrectAnswers] = useState(0);
+    const [isQuizCompleted, setIsQuizCompleted] = useState(false);
 
     const [remainingTime, setRemainingTime] = useState(300);
     const [timerActive, setTimerActive] = useState(false);
@@ -36,6 +37,11 @@ const Quiz = ({ timer, responses, mode }) => {
     const totalQuestions = mode === "Easy" 
         ? easyQuiz.length 
         : quiz.reduce((sum, topic) => sum + topic.questions.length, 0);
+
+        useEffect(() => {
+            setScore(0);
+        }, []);
+        
 
     const retrieveUseTimeAmount = async () => {
         try {
@@ -90,22 +96,11 @@ const Quiz = ({ timer, responses, mode }) => {
         setCurrentOptions(selectedResponses);
     }, [currentQuestion]);
 
-    if (!currentQuiz || !currentQuestion) {
-        return (
-            <View style={styles.container}>
-                <Text style={styles.errorText}>
-                    { !currentQuiz ? "No more topics available!" : "No more questions available!" }
-                </Text>
-            </View>
-        );
-    }
-
-
     const loadTotalScore = async () => {
         try {
             const storedScore = await AsyncStorage.getItem('totalScore');
             if (storedScore !== null) {
-                setScore(parseInt(storedScore));
+                setTotalScore(parseInt(storedScore));
             }
         } catch (e) {
             console.error('Failed to load total score.');
@@ -130,7 +125,7 @@ const Quiz = ({ timer, responses, mode }) => {
         }
     };
 
-    const selectedResponses = mode === "Easy" 
+    const selectedResponses = mode === "Easy"
     ? currentQuestion.answers 
     : responses === 4 ? currentQuestion.options : currentQuestion.allOptions;
 
@@ -170,12 +165,18 @@ const Quiz = ({ timer, responses, mode }) => {
 
 
     const handleNextQuestion = () => {
-        const isLastQuestionInTopic = mode === "Easy" 
-            ? globalQuestionIndex >= totalQuestions - 1 
-            : currentQuestionIndexInTopic >= currentQuiz.questions.length - 1;
+        const isLastQuestionInEasyMode = mode === "Easy" && globalQuestionIndex >= totalQuestions - 1;
+        const isLastQuestionInTopic = mode !== "Easy" && currentQuestionIndexInTopic >= currentQuiz.questions.length - 1;
+
+        if (isLastQuestionInEasyMode) {
+            setIsQuizCompleted(true);
+            console.log('Quiz completed! Your score:', score);
+            return;
+        }
         
         if (globalQuestionIndex + 1 >= totalQuestions) {
             console.log('Quiz completed! Your score:', score);
+            return;
         } else if (isLastQuestionInTopic) {
             if (mode !== "Easy") {
                 setCurrentTopicIndex(currentTopicIndex + 1);
@@ -187,11 +188,11 @@ const Quiz = ({ timer, responses, mode }) => {
                 setCurrentQuestionIndexInTopic(currentQuestionIndexInTopic + 1);
             }
         }
-
+    
         setGlobalQuestionIndex(globalQuestionIndex + 1);
         setSelectedOption(null);
         setCorrectOption(null);
-    };
+    };    
 
 
     const handleSkipQuestion = () => {
@@ -235,22 +236,24 @@ const Quiz = ({ timer, responses, mode }) => {
     };
 
     const handleStoreModalVisible = async () => {
-        if (storeModalVisible) {
-            if (useTimeAmount > 0) {
-                setRemainingTime(prevTime => prevTime + useTimeAmount);
-    
-                try {
-                    await AsyncStorage.removeItem('useTimeAmount');
-                    console.log('useTimeAmount cleared from storage');
-                } catch (e) {
-                    console.error('Failed to clear useTimeAmount from storage.');
-                }
-                
-                setUseTimeAmount(0);
-            }
-        }
         setStoreModalVisible(!storeModalVisible);
     };
+
+    const handleAddTime = async () => {
+        if (useTimeAmount > 0) {
+            setRemainingTime(prevTime => prevTime + useTimeAmount);
+
+            try {
+                await AsyncStorage.removeItem('useTimeAmount');
+                console.log('useTimeAmount cleared from storage');
+            } catch (e) {
+                console.error('Failed to clear useTimeAmount from storage.');
+            }
+            
+            setUseTimeAmount(0);
+        }
+    }
+    
 
     const handleTryAgain = () => {
         setCurrentTopicIndex(0);
@@ -275,15 +278,42 @@ const Quiz = ({ timer, responses, mode }) => {
             console.error('Failed to share quiz result:', error);
         }
     };
+
+    if (!currentQuiz || !currentQuestion) {
+        return (
+            <View style={styles.container}>
+                <Text style={styles.errorText}>
+                    { !currentQuiz ? "No more topics available!" : "No more questions available!" }
+                </Text>
+            </View>
+        );
+    }
     
 
-    if (globalQuestionIndex >= totalQuestions || remainingTime === 0) {
+    if (globalQuestionIndex >= totalQuestions || isQuizCompleted || remainingTime === 0) {
         return (
             <View style={styles.container}>
                 <Text style={styles.finishText}>Quiz completed!</Text>
-                <Text style={styles.statsText}>Your Total Score: {totalScore}</Text>
-                <Text style={styles.statsText}>Correct Answers: {correctAnswers} / {totalQuestions}</Text>
-                <Text style={styles.statsText}>Final Score: {score}</Text>
+                <View style={styles.finishStatsContainer}>
+                    <View style={styles.finishScoreContainer}>
+                        <Text style={styles.statsText}>Your Total Score: {totalScore}</Text>
+                        <View style={styles.finishScoreIcon}>
+                            <Icons type={'coin'}/>
+                        </View>
+                    </View>
+                    <View style={styles.finishScoreContainer}>
+                        <Text style={styles.statsText}>Correct Answers: {correctAnswers} / {totalQuestions}</Text>
+                        <View style={styles.finishScoreIcon}>
+                            <Icons type={'correct'}/>
+                        </View>
+                    </View>
+                    <View style={styles.finishScoreContainer}>
+                        <Text style={styles.statsText}>Final Score: {score}</Text>
+                        <View style={styles.finishScoreIcon}>
+                            <Icons type={'coin'}/>
+                        </View>
+                    </View>
+                </View>
                 <TouchableOpacity style={styles.tryAgainButton} onPress={handleTryAgain}>
                     <Text style={styles.tryAgainButtonText}>Try Again</Text>
                 </TouchableOpacity>
@@ -381,6 +411,7 @@ const Quiz = ({ timer, responses, mode }) => {
                 onUseHint={removeWrongOptions}
                 onHintsUsed={() => setHintsUsedInTopic(hintsUsedInTopic + 1)}
                 timer={timer}
+                onAddTime={handleAddTime}
                 />
         </View>
     );
@@ -500,10 +531,11 @@ const styles = StyleSheet.create({
         color: '#284c61'
     },
     finishText: {
-        fontSize: 24,
+        fontSize: 30,
         fontWeight: 'bold',
         textAlign: 'center',
         color: '#284c61',
+        marginTop: 20
     },
     errorText: {
         fontSize: 18,
@@ -545,40 +577,63 @@ const styles = StyleSheet.create({
         height: 60,
     },
     statsText: {
-        fontSize: 18,
+        fontSize: 19,
         textAlign: 'center',
         marginVertical: 10,
+        color: '#203d4e'
     },
     tryAgainButton: {
         backgroundColor: '#284c61',
-        padding: 12,
+        padding: 15,
         marginVertical: 10,
-        borderRadius: 5,
+        borderRadius: 10,
         width: '100%'
     },
     tryAgainButtonText: {
-        fontSize: 16,
+        fontSize: 18,
         textAlign: 'center',
         color: 'white',
     },
     shareButton: {
         backgroundColor: '#305b75',
-        padding: 12,
-        borderRadius: 5,
+        padding: 15,
+        borderRadius: 10,
         width: '100%'
     },
     menuButton: {
         backgroundColor: '#203d4e',
-        padding: 12,
-        borderRadius: 5,
+        padding: 15,
+        borderRadius: 10,
         width: '100%',
         marginTop: 20
     },
     shareButtonText: {
-        fontSize: 16,
+        fontSize: 18,
         textAlign: 'center',
         color: 'white',
     },
+    finishStatsContainer: {
+        padding: 20,
+        borderRadius: 15,
+        backgroundColor: '#fff',
+        justifyContent: 'center',
+        width: '100%',
+        borderWidth: 1,
+        borderColor: '#305b75',
+        marginTop: 180,
+        marginBottom: 150
+    },
+    finishScoreContainer: {
+        width: '100%',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    finishScoreIcon: {
+        width: 35,
+        height: 35,
+        marginLeft: 10
+    }
 });
 
 export default Quiz;
