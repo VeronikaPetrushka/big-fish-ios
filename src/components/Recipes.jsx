@@ -50,16 +50,15 @@ const saveRecipesToStorage = async (userRecipes) => {
 
 const handleAddRecipe = (recipeDetails) => {
   const newRecipe = {
-      ...recipeDetails,
-      ingredients: recipeDetails.ingredients.split('\n'),
-      instructions: recipeDetails.instructions.split('\n'),
-      id: userRecipes.length > 0 ? userRecipes[userRecipes.length - 1].id + 1 : 1,
+    ...recipeDetails,
+    ingredients: recipeDetails.ingredients.trim() ? recipeDetails.ingredients.split('\n') : [],
+    instructions: recipeDetails.instructions.trim() ? recipeDetails.instructions.split('\n') : [],
+    id: userRecipes.length > 0 ? userRecipes[userRecipes.length - 1].id + 1 : 1,
   };
   const newRecipes = [...userRecipes, newRecipe];
   setUserRecipes(newRecipes);
   saveRecipesToStorage(newRecipes);
 };
-
 
   const handleAddRecipeClose = () => {
     setAddRecipeVisible(false);
@@ -72,9 +71,9 @@ const handleAddRecipe = (recipeDetails) => {
 
   const handleShareRecipe = async () => {
     if (selectedRecipe) {
-      const { title, ingredients, instructions } = selectedRecipe;
+      const { title, name, ingredients, instructions } = selectedRecipe;
       const message = `
-        Check out this recipe for ${title}!
+        Check out this recipe for ${title || name}!
         
         Ingredients:
         ${ingredients.join('\n')}
@@ -123,41 +122,50 @@ const handleAddRecipe = (recipeDetails) => {
         contentContainerStyle={styles.list}
       />
 
-      <Modal
-        transparent={true}
-        visible={detailsModalVisible}
-        animationType="slide"
-        onRequestClose={handleDetailsModalClose}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <ScrollView>
-              {selectedRecipe && (
-                <>
-                  <Text style={styles.modalTitle}>{selectedRecipe.title}</Text>
-                  <View style={styles.imgContainer}>
-                    <Image source={selectedRecipe.image} style={styles.image} />
-                  </View>
-                  <Text style={styles.modalSubtitle}>Ingredients:</Text>
-                  {selectedRecipe.ingredients.map((ingredient, index) => (
-                    <Text key={index} style={styles.modalText}>- {ingredient}</Text>
-                  ))}
-                  <Text style={styles.modalSubtitle}>Instructions:</Text>
-                  {selectedRecipe.instructions.map((instruction, index) => (
-                    <Text key={index} style={styles.modalText}>{instruction}</Text>
-                  ))}
-                </>
-              )}
-              <TouchableOpacity style={styles.shareButton} onPress={handleShareRecipe}>
-                <Text style={styles.shareButtonText}>Share Recipe</Text>
-              </TouchableOpacity>
-            </ScrollView>
-            <TouchableOpacity style={styles.closeButton} onPress={handleDetailsModalClose}>
-              <Icons type={'close'} />
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+<Modal
+  transparent={true}
+  visible={detailsModalVisible}
+  animationType="slide"
+  onRequestClose={handleDetailsModalClose}
+>
+  <View style={styles.modalContainer}>
+    <View style={styles.modalContent}>
+      <ScrollView style={{width: '100%', height: '100%'}}>
+        {selectedRecipe && (
+          <>
+            <Text style={styles.modalTitle}>{selectedRecipe.title || selectedRecipe.name}</Text>
+            <View style={styles.imgContainer}>
+              <Image source={selectedRecipe.imageUri ? { uri: selectedRecipe.imageUri } : selectedRecipe.image} style={styles.image} />
+            </View>
+            <Text style={styles.modalSubtitle}>Ingredients:</Text>
+            {Array.isArray(selectedRecipe.ingredients) ? (
+              selectedRecipe.ingredients.map((ingredient, index) => (
+                <Text key={index} style={styles.modalText}>- {ingredient}</Text>
+              ))
+            ) : (
+              <Text style={styles.modalText}>{selectedRecipe.ingredients}</Text>
+            )}
+
+            <Text style={styles.modalSubtitle}>Instructions:</Text>
+            {Array.isArray(selectedRecipe.instructions) ? (
+              selectedRecipe.instructions.map((instruction, index) => (
+                <Text key={index} style={styles.modalText}>{instruction}</Text>
+              ))
+            ) : (
+              <Text style={styles.modalText}>{selectedRecipe.instructions}</Text>
+            )}
+          </>
+        )}
+        <TouchableOpacity style={styles.shareButton} onPress={handleShareRecipe}>
+          <Text style={styles.shareButtonText}>Share Recipe</Text>
+        </TouchableOpacity>
+      </ScrollView>
+      <TouchableOpacity style={styles.closeButton} onPress={handleDetailsModalClose}>
+        <Icons type={'close'} />
+      </TouchableOpacity>
+    </View>
+  </View>
+</Modal>
 
       <CreateRecipe 
         visible={addRecipeVisible} 

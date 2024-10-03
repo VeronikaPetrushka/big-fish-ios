@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Text, View, Image, TouchableOpacity, StyleSheet } from "react-native";
+import { Text, View, Image, TouchableOpacity, StyleSheet, ImageBackground} from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import AboutModal from "./About";
 import SettingsModal from './Settings';
@@ -77,11 +77,13 @@ const Home = () => {
     }, []);
 
     return (
+        <ImageBackground
+        source={require('../assets/background/home.png')}
+        style={styles.backgroundImage}
+        resizeMode="cover"
+      >
+        <View style={styles.overlay}>
         <View style={styles.container}>
-            <View style={styles.imageContainer}>
-                <Image style={styles.image} source={require('../assets/background/home.png')} />
-            </View>
-
             <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('QuizStartScreen')}>
                 <Text style={styles.btnTxt}>Quiz</Text>
             </TouchableOpacity>
@@ -102,6 +104,8 @@ const Home = () => {
             <SettingsModal visible={settingsModalVisible} onClose={closeSettingsModal} />
             <DailyBonus visible={dailyBonusVisible} onClose={closeDailyBonusModal} bonusAmount={bonusAmount} />
         </View>
+        </View>
+        </ImageBackground>
     )
 };
 
@@ -109,28 +113,24 @@ const styles = StyleSheet.create({
     container: {
         width: '100%',
         height: '110%',
-        backgroundColor: '#c1e5fa',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        padding: 30,
-        paddingTop: 60
-    },
-
-    imageContainer: {
-        width: "100%",
-        height: 270,
         alignItems: 'center',
         justifyContent: 'center',
-        marginBottom: 50,
-        borderRadius: 12,
-        overflow: 'hidden'
+        padding: 30,
     },
 
-    image: {
+    backgroundImage: {
         width: '100%',
-        height: '100%',
-        resizeMode: 'cover'
-    },
+        height: '110%',
+        justifyContent: 'center',
+      },
+
+    overlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.4)',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+      },
 
     btn: {
         padding: 12,
@@ -138,15 +138,16 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         width: '100%',
-        borderWidth: 1,
-        borderColor: '#284c61',
+        borderWidth: 2,
+        borderColor: '#a8cce1',
         borderRadius: 12,
         marginBottom: 10
     },
 
     btnTxt: {
         fontSize: 20,
-        color: '#284c61',
+        color: '#a8cce1',
+        fontWeight: '600'
     }
 });
 
