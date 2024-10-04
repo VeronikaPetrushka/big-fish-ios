@@ -1,15 +1,15 @@
-import { SafeAreaView, View } from "react-native"
+import { View } from "react-native"
 import Diary from "../components/Diary"
 import MenuPanel from "../components/MenuPanel"
 
 const DiaryScreen = () => {
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <Diary />
             <View style={styles.menu}>
                 <MenuPanel />
             </View>
-        </SafeAreaView>
+        </View>
     )
 }; 
 

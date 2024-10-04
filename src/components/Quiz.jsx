@@ -405,9 +405,9 @@ const Quiz = ({ timer, responses, mode }) => {
 const styles = StyleSheet.create({
     container: {
         width: '100%',
-        height: '110%',
+        height: '100%',
         padding: 20,
-        paddingTop: 30,
+        paddingTop: 70,
         backgroundColor: '#eff8fd'
     },
     topic: {

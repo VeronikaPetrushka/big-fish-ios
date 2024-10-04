@@ -119,12 +119,12 @@ const QuizStart = () => {
 const styles = StyleSheet.create({
     container: {
         width: '100%',
-        height: '110%',
+        height: '100%',
         backgroundColor: '#c1e5fa',
         alignItems: 'center',
         justifyContent: 'flex-start',
         padding: 30,
-        paddingTop: 80
+        paddingTop: 70
     },
 
     backIcon: {
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
         height: 60,
         padding: 10,
         position: 'absolute',
-        top: 10,
+        top: 50,
         left: 20
     },
 
@@ -143,7 +143,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         marginBottom: 30,
         borderRadius: 12,
-        overflow: 'hidden'
+        overflow: 'hidden',
+        marginTop: 50
     },
 
     image: {

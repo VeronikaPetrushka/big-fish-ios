@@ -30,9 +30,9 @@ const Directory = () => {
 const styles = StyleSheet.create({
     container: {
         padding: 20,
-        paddingTop: 50,
+        paddingTop: 70,
         width: '100%',
-        height: '110%',
+        height: '100%',
         backgroundColor: '#c1e5fa',
         alignItems: 'center',
         justifyContent: 'flex-start',

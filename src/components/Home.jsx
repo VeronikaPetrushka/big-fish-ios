@@ -172,7 +172,7 @@ const Home = () => {
 const styles = StyleSheet.create({
     container: {
         width: '100%',
-        height: '110%',
+        height: '100%',
         alignItems: 'center',
         justifyContent: 'center',
         padding: 30,
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
 
     backgroundImage: {
         width: '100%',
-        height: '110%',
+        height: '100%',
         justifyContent: 'center',
       },
 

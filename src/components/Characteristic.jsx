@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     height: 60,
     padding: 10,
     position: 'absolute',
-    top: 10,
+    top: 50,
     left: 10,
     zIndex: 10
 },
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 10,
     elevation: 5,
-    marginTop: 70,
+    marginTop: 130,
     justifyContent: 'center',
     alignItems: 'center',
   },

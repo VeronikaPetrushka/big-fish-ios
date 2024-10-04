@@ -78,8 +78,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        paddingTop: 40,
-        paddingBottom: 120,
+        paddingTop: 70,
+        paddingBottom: 140,
         backgroundColor: '#c1e5fa',
     },
     backIcon: {
@@ -87,8 +87,9 @@ const styles = StyleSheet.create({
         height: 60,
         padding: 10,
         position: 'absolute',
-        top: 10,
-        left: 20
+        top: 50,
+        left: 20,
+        zIndex: 10
     },
     header: {
         fontSize: 24,

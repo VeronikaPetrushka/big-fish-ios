@@ -1,15 +1,15 @@
-import { SafeAreaView, View } from "react-native"
+import { View } from "react-native"
 import Scoreboard from "../components/Scoreboard"
 import MenuPanel from "../components/MenuPanel"
 
 const ScoreboardScreen = () => {
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <Scoreboard />
             <View style={styles.menu}>
                 <MenuPanel />
             </View>
-        </SafeAreaView>
+        </View>
     )
 }; 
 

@@ -124,9 +124,9 @@ const Diary = () => {
 const styles = StyleSheet.create({
     container: {
         width: '100%',
-        height: '110%',
+        height: '100%',
         padding: 20,
-        paddingTop: 40,
+        paddingTop: 70,
         paddingBottom: 200,
         backgroundColor: '#c1e5fa',
     },
