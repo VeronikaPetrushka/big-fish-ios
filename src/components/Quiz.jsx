@@ -166,6 +166,7 @@ const Quiz = ({ timer, responses, mode }) => {
         }
         
         if (globalQuestionIndex + 1 >= totalQuestions) {
+            setIsQuizCompleted(true);
             console.log('Quiz completed! Your score:', score);
             return;
         } else if (isLastQuestionInTopic) {
@@ -235,6 +236,7 @@ const Quiz = ({ timer, responses, mode }) => {
     };
     
     const handleTryAgain = () => {
+        setIsQuizCompleted(false);
         setCurrentTopicIndex(0);
         setCurrentQuestionIndexInTopic(0);
         setGlobalQuestionIndex(0);

@@ -84,6 +84,9 @@ const UserProfile = ({ visible, onClose }) => {
   const handleAvatarSelect = (avatarUri) => {
     setSelectedAvatar(avatarUri);
     setUploadedImage(null);
+    AsyncStorage.removeItem('uploadedImage');
+    const selectedAvatarId = avatars.find(img => img.avatar === avatarUri)?.id;
+    AsyncStorage.setItem('userAvatar', selectedAvatarId);
     setShowAvatars(false);
   };
 
@@ -179,6 +182,7 @@ const UserProfile = ({ visible, onClose }) => {
     </Modal>
   );
 };
+
 
 const styles = {
   modalContainer: {

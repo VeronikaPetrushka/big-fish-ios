@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect, useRef} from 'react';
+import { Animated, View, ImageBackground, Text, StyleSheet } from 'react-native';
+import * as Progress from 'react-native-progress';
 import { enableScreens } from 'react-native-screens';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -12,19 +14,70 @@ import DirectoryScreen from './src/screens/DirectoryScreen.jsx';
 import CharacteristicScreen from './src/screens/CharacteristicScreen.jsx';
 import TaxonomyScreen from './src/screens/TaxonomyScreen.jsx';
 import RecipesScreen from './src/screens/RecipesScreen.jsx';
-import MusicPlayer from './src/components/MusicPlayer';
-import { MusicProvider } from './src/constants/context.js';
 
 enableScreens();
 
 const Stack = createStackNavigator();
 
 const App = () => {
+    const [loaderIsEnded, setLoaderIsEnded] = useState(false);
+    const [prog, setProg] = useState(0);
+    const [indeterminate, setIndeterminate] = useState(true);
+  
+    const appearingAnim = useRef(new Animated.Value(0)).current;
+  
+    useEffect(() => {
+      Animated.timing(appearingAnim, {
+        toValue: 1,
+        duration: 6000,
+        useNativeDriver: true,
+      }).start();
+    }, []);
+  
+    useEffect(() => {
+      let interval;
+      const timer = setTimeout(() => {
+        setIndeterminate(false);
+        
+        interval = setInterval(() => {
+          setProg(prevProg => Math.min(1, prevProg + 1 / (5500 / 500))); 
+        }, 500);
+      }, 1500);
+      return () => {
+        clearTimeout(timer);
+        clearInterval(interval);
+      };
+    }, []);
+  
+    useEffect(() => {
+      setTimeout(() => {
+        setLoaderIsEnded(true);
+      }, 8000);
+    }, []);  
+
     return (
-        <MusicProvider>
             <NavigationContainer>
-                    <MusicPlayer />
-                    <Stack.Navigator initialRouteName="HomeScreen">
+                {
+                    !loaderIsEnded ? (
+                        <View style={{ flex: 1 }}>
+                        <ImageBackground style={{ flex: 1 }} source={require('./src/assets/background/home.png')}>
+                            <View style={{ flex: 1, alignItems: 'center', paddingBottom: 30 }}>
+                                <Animated.View
+                                    style={{ ...styles.contentConteiner, opacity: appearingAnim }}>
+                                    <Text style={{ ...styles.congratText }}>Welcome to Fishing App</Text>
+                                    <Progress.Bar
+                                    width={250}
+                                    height={10}
+                                    color="#d2f0bc"
+                                    progress={prog}
+                                    indeterminate={indeterminate}
+                                />
+                                </Animated.View>
+                            </View>
+                        </ImageBackground>
+                    </View>
+                    ) : (
+                        <Stack.Navigator initialRouteName="HomeScreen">
                         <Stack.Screen 
                             name="HomeScreen" 
                             component={HomeScreen} 
@@ -76,9 +129,32 @@ const App = () => {
                             options={{ headerShown: false }} 
                         />
                     </Stack.Navigator>
+                    )
+                }
             </NavigationContainer>
-        </MusicProvider>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      position: 'relative',
+    },
+    imgBack: {flex: 1},
+    contentConteiner: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingHorizontal: 5,
+    },
+    congratText: {
+      fontSize: 80,
+      fontWeight: 'bold',
+      color: '#d2f0bc',
+      //fontFamily: FONTS.primary,
+      textAlign: 'center',
+      marginBottom: 30,
+    },
+  });
 
 export default App;

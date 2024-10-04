@@ -7,6 +7,8 @@ import AboutModal from "./About";
 import SettingsModal from './Settings';
 import DailyBonus from './DailyBonus';
 import avatars from '../constants/avatars.js';
+import { MusicProvider } from '../constants/context.js';
+import MusicPlayer from './MusicPlayer.jsx';
 
 const Home = () => {
     const navigation = useNavigation();
@@ -27,9 +29,11 @@ const Home = () => {
             
           if (storedImageUri) {
             setUploadedImage(storedImageUri);
+            setCurrentAvatar(null);
         } else if (storedAvatarId) {
             const avatar = avatars.find(img => img.id === storedAvatarId);
             setCurrentAvatar(avatar ? avatar.avatar : avatars[0].avatar);
+            setUploadedImage(null);
         } else {
             setUploadedImage(null);
             setCurrentAvatar(avatars[0].avatar);
@@ -126,6 +130,8 @@ const Home = () => {
     }, []);
 
     return (
+        <MusicProvider>
+         <MusicPlayer />
         <ImageBackground
         source={require('../assets/background/home.png')}
         style={styles.backgroundImage}
@@ -166,8 +172,10 @@ const Home = () => {
         </View>
         </View>
         </ImageBackground>
+        </MusicProvider>
     )
 };
+
 
 const styles = StyleSheet.create({
     container: {
