@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import TrackPlayer, { Capability, usePlaybackState } from 'react-native-track-player';
+import TrackPlayer, { Capability, usePlaybackState, State, Event } from 'react-native-track-player';
+import { RepeatMode } from 'react-native-track-player';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const MusicContext = createContext();
@@ -13,7 +14,10 @@ export const MusicProvider = ({ children }) => {
     useEffect(() => {
         const setupPlayer = async () => {
             try {
-                await TrackPlayer.setupPlayer();
+                const isInitialized = await TrackPlayer.getState();
+                if (isInitialized === State.None) {
+                    await TrackPlayer.setupPlayer();
+                }
 
                 await TrackPlayer.add({
                     id: '1',
@@ -22,19 +26,19 @@ export const MusicProvider = ({ children }) => {
                     artist: 'Artist Name',
                 });
 
-                TrackPlayer.setRepeatMode(TrackPlayer.REPEAT_MODE_TRACK);
+                await TrackPlayer.setRepeatMode(RepeatMode.Track);
 
                 const savedState = await AsyncStorage.getItem('toggleLoudness');
                 if (savedState !== null) {
                     const parsedState = JSON.parse(savedState);
                     setIsPlaying(parsedState);
                     if (parsedState) {
-                        TrackPlayer.play();
+                        await TrackPlayer.play();
                     } else {
-                        TrackPlayer.pause();
+                        await TrackPlayer.pause();
                     }
                 } else {
-                    TrackPlayer.play();
+                    await TrackPlayer.play();
                 }
             } catch (error) {
                 console.log('Error setting up TrackPlayer', error);
@@ -43,7 +47,19 @@ export const MusicProvider = ({ children }) => {
 
         setupPlayer();
 
+        const onPlaybackStateChanged = (state) => {
+            console.log('Playback state changed', state);
+        };
+        const onPlayWhenReadyChanged = (playWhenReady) => {
+            console.log('Play when ready changed', playWhenReady);
+        };
+
+        TrackPlayer.addEventListener(Event.PlaybackState, onPlaybackStateChanged);
+        TrackPlayer.addEventListener(Event.PlaybackPlayWhenReadyChanged, onPlayWhenReadyChanged);
+
         return () => {
+            TrackPlayer.removeEventListener(Event.PlaybackState, onPlaybackStateChanged);
+            TrackPlayer.removeEventListener(Event.PlaybackPlayWhenReadyChanged, onPlayWhenReadyChanged);
             TrackPlayer.stop();
         };
     }, []);
