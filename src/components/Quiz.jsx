@@ -59,38 +59,29 @@ const Quiz = ({ timer, responses, mode }) => {
             retrieveUseTimeAmount();
         }
     }, [storeModalVisible]);
-    
 
     useEffect(() => {
-        if (timer === 'Yes') {
-            setTimerActive(true);
+        let timerInterval;
+        if (timer === 'Yes' && remainingTime > 0 && globalQuestionIndex < totalQuestions) {
+            timerInterval = setInterval(() => {
+                setRemainingTime((prevTime) => prevTime - 1);
+            }, 1000);
+            
             Animated.timing(progress, {
-                toValue: 0,
-                duration: 300000,
+                toValue: remainingTime / 300,
+                duration: 1000,
                 useNativeDriver: false,
             }).start();
+        } else if (remainingTime === 0) {
+            clearInterval(timerInterval);
         }
-    }, [timer]);
-
-    useEffect(() => {
-        if (timer === 'Yes' && remainingTime > 0 && globalQuestionIndex < totalQuestions) {
-            progress.setValue(remainingTime / 300);
-            
-            const timerInterval = setInterval(() => {
-                setRemainingTime(prevTime => prevTime - 1);
-            }, 1000);
-    
-            return () => clearInterval(timerInterval);
-        } else if (remainingTime === 0 || globalQuestionIndex >= totalQuestions) {
-            console.log('Time is up or quiz completed! Your score:', score);
-            setTimerActive(false);
-        }
-    }, [remainingTime, globalQuestionIndex]);
-
+        return () => clearInterval(timerInterval);
+    }, [timer, remainingTime]);    
 
     const currentQuestion = mode === "Easy" 
         ? currentQuiz[globalQuestionIndex]
         : currentQuiz.questions[currentQuestionIndexInTopic];
+
 
     useEffect(() => {
         setCurrentOptions(selectedResponses);
@@ -239,22 +230,10 @@ const Quiz = ({ timer, responses, mode }) => {
         setStoreModalVisible(!storeModalVisible);
     };
 
-    const handleAddTime = async () => {
-        if (useTimeAmount > 0) {
-            setRemainingTime(prevTime => prevTime + useTimeAmount);
-
-            try {
-                await AsyncStorage.removeItem('useTimeAmount');
-                console.log('useTimeAmount cleared from storage');
-            } catch (e) {
-                console.error('Failed to clear useTimeAmount from storage.');
-            }
-            
-            setUseTimeAmount(0);
-        }
-    }
+    const handleAddTime = (additionalTime) => {
+        setRemainingTime((prevTime) => prevTime + additionalTime);
+    };
     
-
     const handleTryAgain = () => {
         setCurrentTopicIndex(0);
         setCurrentQuestionIndexInTopic(0);
@@ -332,10 +311,14 @@ const Quiz = ({ timer, responses, mode }) => {
             {timer === 'Yes' && (
                 <View style={[styles.progressBarContainer,
                     selectedResponses === currentQuestion.allOptions && timer === 'Yes' ? styles.progressBarContainerTimer6 : styles.progressBarContainer]}>
-                    <Animated.View style={[styles.progressBar, { width: progress.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: ['0%', '100%'],
-                    }) }]} />
+                    <Animated.View style={[styles.progressBar, 
+                        {
+                            width: progress.interpolate({
+                                inputRange: [0, 1],
+                                outputRange: ['0%', '100%']
+                            }),
+                        },
+                    ]} />
                     <Text style={styles.timerText}>{formatTime(remainingTime)}</Text>
                 </View>
             )}

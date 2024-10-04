@@ -73,25 +73,18 @@ const StoreModal = ({ visible, onClose, onUseHint, onHintsUsed, timer, onAddTime
         }
     };
 
-    const useTime = async () => {
-        if (storedTimeAmount >= useTimeAmount && useTimeAmount > 0) {
+    const useTime = () => {
+        if (useTimeAmount <= storedTimeAmount && useTimeAmount > 0) {
+            onAddTime(useTimeAmount);
             const newTimeAmount = storedTimeAmount - useTimeAmount;
             setStoredTimeAmount(newTimeAmount);
-    
-            try {
-                await AsyncStorage.setItem('timeAmount', newTimeAmount.toString());
-                await AsyncStorage.setItem('useTimeAmount', useTimeAmount.toString());
-            } catch (error) {
-                console.error('Failed to store timeAmount or useTimeAmount in storage:', error);
-            }
-            onAddTime(useTimeAmount);
-    
+            AsyncStorage.setItem('timeAmount', JSON.stringify(newTimeAmount));
+
             setTimeAmount(0);
             setUseTimeAmount(0);
-        
             onClose();
         } else {
-            alert("Not enough time available to use!");
+            alert("Invalid time amount selected!");
         }
     };
     
