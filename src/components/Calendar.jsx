@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
         height: '100%',
         padding: 20,
         paddingTop: 70,
-        paddingBottom: 200,
+        paddingBottom: 150,
         backgroundColor: '#c1e5fa',
     },
     eventTitle: {

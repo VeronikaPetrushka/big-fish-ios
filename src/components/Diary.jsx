@@ -82,7 +82,7 @@ const Diary = () => {
                 {diaryEntries.map((entry, index) => (
                     <View key={index} style={styles.entryCard}>
                         {showInfo[index] ? (
-                            <View style={{width: '100%', height: '80%'}}>
+                            <View style={{width: '100%', height: '90%'}}>
                                 <ScrollView>
                                 {entry.fishingPlace && <Text style={styles.cardTitle}>Fishing Place: {entry.fishingPlace}</Text>}
                                 {entry.date && <Text style={styles.cardTitle}>Date: {entry.date.toLocaleDateString()}</Text>}
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
         height: '100%',
         padding: 20,
         paddingTop: 70,
-        paddingBottom: 200,
+        paddingBottom: 150,
         backgroundColor: '#c1e5fa',
     },
     entryCard: {
