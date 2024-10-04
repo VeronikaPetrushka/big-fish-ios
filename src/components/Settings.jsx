@@ -81,6 +81,7 @@ const SettingsModal = ({ visible, onClose }) => {
         try {
             await AsyncStorage.setItem('userProfile', "");
             await AsyncStorage.setItem('userAvatar', avatars[0].id);
+            await AsyncStorage.removeItem('uploadedImage');
 
             await AsyncStorage.removeItem('totalScore');
             await AsyncStorage.removeItem('hintsAmount');

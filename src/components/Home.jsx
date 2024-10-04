@@ -11,7 +11,8 @@ import avatars from '../constants/avatars.js';
 const Home = () => {
     const navigation = useNavigation();
     const [userProfileModalVisible, setUserProfileModalVisible] = useState(false);
-    const [currentAvatar, setCurrentAvatar] = useState(avatars[0].avatarBack);
+    const [currentAvatar, setCurrentAvatar] = useState(avatars[0].avatar);
+    const [uploadedImage, setUploadedImage] = useState(null);
     const [userName, setUserName] = useState('');  
     const [aboutModalVisible, setAboutModalVisible] = useState(false);
     const [settingsModalVisible, setSettingsModalVisible] = useState(false);
@@ -22,10 +23,17 @@ const Home = () => {
     const loadAvatar = async () => {
         try {
           const storedAvatarId = await AsyncStorage.getItem('userAvatar');
-          if (storedAvatarId) {
+          const storedImageUri = await AsyncStorage.getItem('uploadedImage');
+            
+          if (storedImageUri) {
+            setUploadedImage(storedImageUri);
+        } else if (storedAvatarId) {
             const avatar = avatars.find(img => img.id === storedAvatarId);
             setCurrentAvatar(avatar ? avatar.avatar : avatars[0].avatar);
-          }
+        } else {
+            setUploadedImage(null);
+            setCurrentAvatar(avatars[0].avatar);
+        }
         } catch (error) {
           console.error('Error loading avatar:', error);
         }
@@ -60,6 +68,8 @@ const Home = () => {
 
     const closeSettingsModal = async () => {
         setSettingsModalVisible(false);
+        setUploadedImage(null);
+        setCurrentAvatar(avatars[0].avatar);
         await loadAvatar();
         await loadName();
     };
@@ -124,8 +134,11 @@ const Home = () => {
         <View style={styles.overlay}>
         <View style={styles.container}>
             <TouchableOpacity style={styles.userContainer} onPress={() => setUserProfileModalVisible(true)}>
-                <View style={styles.avatarContainer}>
-                    <Image source={currentAvatar} style={styles.avatar}/>
+                <View style={[styles.avatarContainer, uploadedImage && styles.imageContainer]}>
+                    <Image 
+                        source={uploadedImage ? { uri: uploadedImage } : currentAvatar} 
+                        style={[styles.avatar, uploadedImage && styles.avatarImage]}
+                    />
                 </View>
                     <Text style={styles.name}>{userName || "User"}</Text>
             </TouchableOpacity>
@@ -204,10 +217,20 @@ const styles = StyleSheet.create({
         padding: 10
     },
 
+    imageContainer: {
+        padding: 0
+    },
+
     avatar: {
         width: '100%',
         height: '100%',
         resizeMode: 'contain'
+    },
+
+    avatarImage: {
+        width: '100%',
+        height: '100%',
+        resizeMode: 'cover'
     },
 
     name: {
