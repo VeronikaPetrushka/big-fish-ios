@@ -64,7 +64,7 @@ const App = () => {
                             <View style={{ flex: 1, alignItems: 'center', paddingBottom: 30 }}>
                                 <Animated.View
                                     style={{ ...styles.contentConteiner, opacity: appearingAnim }}>
-                                    <Text style={{ ...styles.congratText }}>Welcome to Fishing App</Text>
+                                    <Text style={{ ...styles.congratText }}>Welcome to Fishing Handbook Time</Text>
                                     <Progress.Bar
                                     width={250}
                                     height={10}
