@@ -16,7 +16,7 @@ const AboutModal = ({ visible, onClose }) => {
                 <View style={styles.modalContent}>
                 <ScrollView style={styles.ScrollView}>
                     <Text style={styles.modalText}>
-                    Welcome to <Text style={styles.bold}>Big Catch: Fish Blog !</Text>
+                    Welcome to <Text style={styles.bold}>Fishing Handbook Time !</Text>
                     </Text>
                     <Text style={styles.modalText}>
                     This is your reliable companion in the world of fishing !
@@ -25,7 +25,7 @@ const AboutModal = ({ visible, onClose }) => {
                     We created this app to help anglers enjoy their hobby and improve their skills. In our app, you'll find a wealth of useful features that will make your fishing experience even more interesting and effective.
                     </Text>
                     <Text style={styles.modalText}>
-                    <Text style={styles.bold}>In Big Catch: Fish Blog,</Text> you can:
+                    <Text style={styles.bold}>In Fishing Handbook Time,</Text> you can:
                     </Text>
                     <Text style={styles.modalText}>
                     - Read interesting articles about fishing and its secrets.
