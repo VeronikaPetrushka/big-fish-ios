@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
-import { View, Image, Text, TouchableOpacity, StyleSheet } from "react-native"
+import { View, Image, Text, TouchableOpacity, StyleSheet, ScrollView, Dimensions} from "react-native"
 import { useNavigation } from '@react-navigation/native';
 import Icons from './Icons';
+
+const { height } = Dimensions.get('window');
 
 const QuizStart = () => {
     const navigation = useNavigation();
@@ -24,7 +26,7 @@ const QuizStart = () => {
     return(
         <View style={styles.container}>
             <TouchableOpacity style={styles.backIcon}  onPress={() => navigation.navigate('HomeScreen')}>
-                <Icons type={'back'}/>
+                <Icons type={'back-white'}/>
             </TouchableOpacity>
             <View style={styles.imageContainer}>
                 <Image style={styles.image} source={require('../assets/background/home.png')}/>
@@ -124,7 +126,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-start',
         padding: 30,
-        paddingTop: 70
+        paddingTop: 10
     },
 
     backIcon: {
@@ -132,13 +134,14 @@ const styles = StyleSheet.create({
         height: 60,
         padding: 10,
         position: 'absolute',
-        top: 50,
-        left: 20
+        top: 60,
+        left: 30,
+        zIndex: 1
     },
 
     imageContainer: {
         width: "100%",
-        height: 270,
+        height: height * 0.3,
         alignItems: 'center',
         justifyContent: 'center',
         marginBottom: 30,
@@ -167,7 +170,7 @@ const styles = StyleSheet.create({
 
     toggleContainer: {
         width: 170,
-        height: 50,
+        height: height * 0.065,
         alignItems: 'center',
         padding: 5,
         borderRadius: 30,
@@ -229,7 +232,8 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#284c61',
         borderRadius: 12,
-        marginTop: 10
+        position: 'absolute',
+        bottom: 50
     },
 
     btnTxt: {

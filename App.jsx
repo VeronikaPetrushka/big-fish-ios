@@ -148,10 +148,9 @@ const styles = StyleSheet.create({
       paddingHorizontal: 5,
     },
     congratText: {
-      fontSize: 80,
+      fontSize: 76,
       fontWeight: 'bold',
       color: '#d2f0bc',
-      //fontFamily: FONTS.primary,
       textAlign: 'center',
       marginBottom: 30,
     },

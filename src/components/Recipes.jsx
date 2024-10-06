@@ -205,15 +205,14 @@ const styles = StyleSheet.create({
   list: {
     alignItems: 'center',
     width: '100%',
-    paddingBottom: 170,
+    paddingBottom: 130,
   },
   card: {
     backgroundColor: '#fff',
     borderRadius: 10,
     elevation: 3,
     marginVertical: 10,
-    width: 355,
-    minWidth: 280,
+    width: 330,
     padding: 15,
     alignItems: 'center',
     justifyContent: 'space-around',

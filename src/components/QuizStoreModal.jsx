@@ -1,7 +1,10 @@
 import React, {useState, useEffect} from 'react';
-import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Modal, View, Text, TouchableOpacity, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icons from './Icons';
+
+const { height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 const StoreModal = ({ visible, onClose, onUseHint, onHintsUsed, timer, onAddTime }) => {
     const [hintsAmount, setHintsAmount] = useState(0);
@@ -193,6 +196,8 @@ const StoreModal = ({ visible, onClose, onUseHint, onHintsUsed, timer, onAddTime
         >
             <View style={styles.modalContainer}>
                 <View style={[styles.modalContentTimer, timer === 'Yes' ? styles.modalContentTimer : styles.modalContent]}>
+                    
+                    <ScrollView>
                     <Text style={styles.modalTitle}>Store</Text>
 
                     <View style={styles.statsContainer}>
@@ -306,6 +311,7 @@ const StoreModal = ({ visible, onClose, onUseHint, onHintsUsed, timer, onAddTime
                     </TouchableOpacity>
                     </View>
                     }
+                    </ScrollView>
 
                     <TouchableOpacity style={styles.closeButton} onPress={onClose}>
                         <Icons type={'close'}/>
@@ -325,7 +331,7 @@ const styles = StyleSheet.create({
     },
     modalContentTimer: {
         width: '90%',
-        height: '83%',
+        height: '80.5%',
         padding: 20,
         paddingTop: 30,
         backgroundColor: 'white',
@@ -334,6 +340,7 @@ const styles = StyleSheet.create({
     },
     modalContent: {
         height: '63%',
+        alignItems: 'center'
     },
     modalTitle: {
         fontWeight: 'bold',
@@ -351,7 +358,7 @@ const styles = StyleSheet.create({
         right: 10,
     },
     statsContainer: {
-        width: '100%',
+        width: width * 0.79,
         padding: 10,
         paddingHorizontal: 15,
         alignItems: 'center',
@@ -393,20 +400,13 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-around',
-        marginBottom: 25,
-        width : '100%'
-    },
-    hintContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-around',
         marginBottom: 30,
-        width: '100%'
+        width: width * 0.79
     },
     hintIcon: {
         width: 70,
         height: 70,
-        marginRight: 20
+        marginRight: width * 0.04
     },
     regulatorContainer: {
         flexDirection: 'row',
@@ -423,7 +423,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#284c61',
         marginHorizontal: 2,
-        width: 60,
+        width: width * 0.1,
         textAlign: 'center'
     },
     btnContainer: {

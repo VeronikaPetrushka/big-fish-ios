@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, StyleSheet, TextInput, Modal, Alert, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TextInput, Modal, Alert, TouchableOpacity } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import RNPickerSelect from 'react-native-picker-select';
 
@@ -87,6 +87,7 @@ const CreateCalendar = ({ visible, onClose, onSubmit }) => {
         >
             <View style={styles.modalContainer}>
                 <View style={styles.modalContent}>
+                    <ScrollView style={{width: '100%'}}>
                 <Text style={styles.title}>Create Calendar</Text>
 
                 <View style={styles.dateContainer}>
@@ -147,6 +148,7 @@ const CreateCalendar = ({ visible, onClose, onSubmit }) => {
                         <TouchableOpacity style={styles.cancelBtn} onPress={onClose}>
                             <Text style={styles.btnText}>Cancel</Text>
                         </TouchableOpacity>                    
+                    </ScrollView>
                 </View>
             </View>
         </Modal>

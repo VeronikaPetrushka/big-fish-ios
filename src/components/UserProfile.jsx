@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, TextInput, TouchableOpacity, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, FlatList, Modal } from 'react-native';
+import { View, Text, Image, TextInput, TouchableOpacity, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, FlatList, Modal, Dimensions, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { launchImageLibrary } from 'react-native-image-picker';
 import avatars from '../constants/avatars.js';
 import Icons from './Icons.jsx';
+
+const { width, height } = Dimensions.get('window');
 
 const UserProfile = ({ visible, onClose }) => {
   const [name, setName] = useState("");
@@ -131,6 +133,8 @@ const UserProfile = ({ visible, onClose }) => {
                 <TouchableOpacity style={styles.closeButton} onPress={onClose}>
                   <Icons type={'close'}/>
                 </TouchableOpacity>
+
+                <ScrollView style={{width: '100%'}}>
                 <View style={styles.upperContainer}>
                   <Text style={styles.title}>Account</Text>
                   <TouchableOpacity onPress={toggleAvatarSelection} style={[styles.avatarPlaceholder, uploadedImage && styles.imagePlaceholder]}>
@@ -156,6 +160,10 @@ const UserProfile = ({ visible, onClose }) => {
                       keyExtractor={item => item.id}
                       numColumns={4}
                       style={styles.avatarList}
+                      contentContainerStyle={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}
                     />
                   ) : (
                     <View style={styles.inputContainer}>
@@ -175,6 +183,9 @@ const UserProfile = ({ visible, onClose }) => {
                     </View>
                   )}
                 </View>
+                <View style={{height: height * 0.2}}></View>
+                </ScrollView>
+
               </View>
             </TouchableWithoutFeedback>
           </KeyboardAvoidingView>
@@ -192,7 +203,7 @@ const styles = {
     backgroundColor: 'rgba(0,0,0,0.5)',
   },
   container: {
-    padding: 20,
+    padding: 15,
     flexDirection: "column", 
     justifyContent: "flex-start",
     alignItems: "center",
@@ -266,7 +277,7 @@ const styles = {
   input: {
     paddingVertical: 10,
     paddingHorizontal: 20,
-    marginTop: 50,
+    marginTop: height * 0.05,
     borderWidth: 1,
     borderColor: "#284c61",
     borderRadius: 10,
@@ -292,7 +303,7 @@ const styles = {
     borderRadius: 10,
     marginBottom: 10,
     position: 'absolute',
-    bottom: 30,
+    bottom: height * 0.05,
     backgroundColor: '#284c61',
   },
 
@@ -304,6 +315,7 @@ const styles = {
   avatarList: {
     marginTop: 20,
     height: "39%",
+    width: "103%",
   },
 
   avatarOption: {

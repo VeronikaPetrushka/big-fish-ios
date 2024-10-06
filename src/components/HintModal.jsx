@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Modal, View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icons from './Icons';
 
@@ -74,6 +74,7 @@ const HintModal = ({ visible, onClose, onUseHint, onHintsUsed }) => {
             <View style={styles.modalContainer}>
                 <View style={styles.modalContent}>
 
+                    <ScrollView>
                     <Text style={styles.modalTitle}>Hints store</Text>
 
                     <View style={styles.statsContainer}>
@@ -126,6 +127,8 @@ const HintModal = ({ visible, onClose, onUseHint, onHintsUsed }) => {
                         <Text style={styles.useHintTxt}>Use hint</Text>
                     </TouchableOpacity>
 
+                    </ScrollView>
+
                     <TouchableOpacity style={styles.closeButton} onPress={onClose}>
                         <Icons type={'close'}/>
                     </TouchableOpacity>
@@ -144,7 +147,7 @@ const styles = StyleSheet.create({
     },
     modalContent: {
         width: '90%',
-        height: '83%',
+        height: '80.5%',
         padding: 20,
         paddingTop: 30,
         backgroundColor: 'white',

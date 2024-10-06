@@ -155,7 +155,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         width: '100%',
         alignItems: 'center',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        position: 'absolute',
+        bottom: 10,
+        right: 15
     },
     infoButton: {
         width: 70,

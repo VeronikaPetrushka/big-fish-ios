@@ -106,12 +106,12 @@ const styles = StyleSheet.create({
 },
   page: {
     width: width - 40,
-    height: 570,
+    height: height * 0.62,
     padding: 20,
     backgroundColor: '#fff',
     borderRadius: 10,
     elevation: 5,
-    marginTop: 130,
+    marginTop: height * 0.16,
   },
   title: {
     fontSize: 24,
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: '100%',
-    height: 250,
+    height: height * 0.27,
     resizeMode: 'contain',
     marginBottom: 20,
     marginTop: 10

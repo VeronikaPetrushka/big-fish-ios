@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Animated, Share } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Animated, Share, Dimensions } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import quiz from '../constants/quiz.js';
@@ -7,6 +7,8 @@ import easyQuiz from '../constants/easyQuiz.js';
 import Icons from './Icons.jsx';
 import HintModal from './HintModal.jsx';
 import StoreModal from './QuizStoreModal.jsx';
+
+const { height } = Dimensions.get('window');
 
 const Quiz = ({ timer, responses, mode }) => {
     const navigation = useNavigation();
@@ -409,21 +411,21 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%',
         padding: 20,
-        paddingTop: 70,
+        paddingTop: 60,
         backgroundColor: '#eff8fd'
     },
     topic: {
-        fontSize: 24,
+        fontSize: height * 0.029,
         fontWeight: 'bold',
         marginBottom: 30,
         textAlign: 'center',
         color: '#1e3949'
     },
     question: {
-        fontSize: 20,
+        fontSize: height * 0.023,
         marginBottom: 20,
         textAlign: 'center',
-        height: 80,
+        height: height * 0.09,
         color: '#1e3949'
     },
     questionTimer6: {
@@ -458,12 +460,12 @@ const styles = StyleSheet.create({
         marginRight: 10
     },
     score: {
-        fontSize: 18,
+        fontSize: height * 0.022,
         fontWeight: 'bold',
         color: '#1e3949'
     },
     progressBarContainer: {
-        height: 30,
+        height: height * 0.03,
         backgroundColor: '#bec9cf',
         borderRadius: 15,
         overflow: 'hidden',
@@ -486,19 +488,19 @@ const styles = StyleSheet.create({
         color: '#fff',
     },
     stats: {
-        fontSize: 18,
+        fontSize: height * 0.022,
         fontWeight: 'bold',
         color: '#1e3949'
     },
     optionsContainer: {
         marginBottom: 20,
-        height: 250
+        height: height * 0.24
     },
     optionsContainer6: {
-        height: 380,
+        height: height * 0.445,
     },
     option: {
-        padding: 15,
+        padding: height * 0.011,
         marginVertical: 5,
         borderRadius: 8,
         backgroundColor: '#f3fafd',
@@ -512,7 +514,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#dfafaf',
     },
     optionText: {
-        fontSize: 18,
+        fontSize: height * 0.022,
         color: '#284c61'
     },
     finishText: {
@@ -523,7 +525,7 @@ const styles = StyleSheet.create({
         marginTop: 20
     },
     errorText: {
-        fontSize: 18,
+        fontSize: height * 0.022,
         color: 'red',
         textAlign: 'center',
     },
@@ -533,7 +535,7 @@ const styles = StyleSheet.create({
         marginTop: 20,
         borderRadius: 8,
         alignItems: 'center',
-        marginBottom: 40
+        marginBottom:  height * 0.03
     },
     skipButton6: {
         marginBottom: 15,
@@ -544,11 +546,11 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     skipButtonTimer6: {
-        marginBottom: 12,
-        marginTop: -7,
+        marginBottom: height * 0.02,
+        marginTop: - height * 0.06,
     },
     skipButtonText: {
-        fontSize: 18,
+        fontSize: height * 0.022,
         color: '#fff',
         fontWeight: 'bold',
     },
@@ -558,11 +560,11 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around'
     },
     hintBtn: {
-        width: 60,
-        height: 60,
+        width: height * 0.1,
+        height: height * 0.1,
     },
     statsText: {
-        fontSize: 19,
+        fontSize: height * 0.0225,
         textAlign: 'center',
         marginVertical: 10,
         color: '#203d4e'
@@ -575,7 +577,7 @@ const styles = StyleSheet.create({
         width: '100%'
     },
     tryAgainButtonText: {
-        fontSize: 18,
+        fontSize: height * 0.022,
         textAlign: 'center',
         color: 'white',
     },
@@ -593,7 +595,7 @@ const styles = StyleSheet.create({
         marginTop: 20
     },
     shareButtonText: {
-        fontSize: 18,
+        fontSize: height * 0.022,
         textAlign: 'center',
         color: 'white',
     },
@@ -605,8 +607,8 @@ const styles = StyleSheet.create({
         width: '100%',
         borderWidth: 1,
         borderColor: '#305b75',
-        marginTop: 180,
-        marginBottom: 150
+        marginTop: height * 0.15,
+        marginBottom: height * 0.11
     },
     finishScoreContainer: {
         width: '100%',

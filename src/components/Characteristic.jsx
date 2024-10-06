@@ -101,12 +101,12 @@ const styles = StyleSheet.create({
 },
   page: {
     width: width - 40,
-    height: 570,
+    height: height * 0.62,
     padding: 20,
     backgroundColor: '#fff',
     borderRadius: 10,
     elevation: 5,
-    marginTop: 130,
+    marginTop: height * 0.16,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
   },
   imgContainer: {
     width: '100%',
-    height: 300,
+    height: height * 0.3,
     marginTop: 10,
     marginBottom: 20
   },

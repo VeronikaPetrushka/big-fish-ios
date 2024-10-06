@@ -62,6 +62,10 @@ const Icons = ({ type }) => {
       imageSource = require('../assets/others/previous.png');
       iconStyle = styles.closeIcon;
       break;
+    case 'back-white':
+      imageSource = require('../assets/others/previous.png');
+      iconStyle = styles.closeWhiteIcon;
+      break;
     case 'info':
       imageSource = require('../assets/others/info.png');
       break;
@@ -95,6 +99,12 @@ const styles = StyleSheet.create({
     height: '100%',
     objectFit: 'cover',
     tintColor: '#1e3949',
+  },
+  closeWhiteIcon: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+    tintColor: '#fff',
   }
 });
 
