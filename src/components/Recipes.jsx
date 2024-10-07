@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, Image, FlatList, TouchableOpacity, Modal, ScrollView, Share } from 'react-native';
+import { StyleSheet, View, Text, Image, FlatList, TouchableOpacity, Modal, ScrollView, Share, Dimensions } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import recipes from '../constants/recipes.js';
 import Icons from './Icons.jsx';
 import CreateRecipe from './CreateRecipe.jsx';
+
+const { width } = Dimensions.get('window');
+
 
 const RecipeCard = ({ title, image, onPress }) => {
   return (
@@ -214,7 +217,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     elevation: 3,
     marginVertical: 10,
-    width: 330,
+    width: width * 0.9,
     padding: 15,
     alignItems: 'center',
     justifyContent: 'space-between',

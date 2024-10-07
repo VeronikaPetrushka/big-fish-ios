@@ -5,7 +5,7 @@ import { launchImageLibrary } from 'react-native-image-picker';
 import avatars from '../constants/avatars.js';
 import Icons from './Icons.jsx';
 
-const { width, height } = Dimensions.get('window');
+const { height } = Dimensions.get('window');
 
 const UserProfile = ({ visible, onClose }) => {
   const [name, setName] = useState("");
