@@ -254,7 +254,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         width: '100%',
         borderWidth: 2,
-        borderColor: '#a8cce1',
+        borderColor: '#d2f0bc',
         borderRadius: 12,
         marginBottom: 10,
         zIndex: 10
@@ -262,7 +262,7 @@ const styles = StyleSheet.create({
 
     btnTxt: {
         fontSize: 20,
-        color: '#a8cce1',
+        color: '#d2f0bc',
         fontWeight: '600'
     }
 });

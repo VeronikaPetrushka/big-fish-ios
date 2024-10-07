@@ -8,6 +8,7 @@ import CreateRecipe from './CreateRecipe.jsx';
 const RecipeCard = ({ title, image, onPress }) => {
   return (
     <View style={styles.card}>
+      <ScrollView style={{width: '100%'}} contentContainerStyle={{ justifyContent: 'space-between'}}>
       <View style={styles.imgContainer}>
         <Image source={image} style={styles.image} />
       </View>
@@ -15,6 +16,7 @@ const RecipeCard = ({ title, image, onPress }) => {
       <TouchableOpacity style={styles.recipeBtn} onPress={onPress}>
         <Text style={styles.recipeBtnTxt}>See the recipe</Text>
       </TouchableOpacity>
+      </ScrollView>
     </View>
   );
 };
@@ -215,8 +217,8 @@ const styles = StyleSheet.create({
     width: 330,
     padding: 15,
     alignItems: 'center',
-    justifyContent: 'space-around',
-    height: 330,
+    justifyContent: 'space-between',
+    height: 315,
   },
   imgContainer: {
     width: '100%',
