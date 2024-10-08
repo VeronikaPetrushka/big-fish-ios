@@ -133,7 +133,7 @@ const Home = () => {
         <MusicProvider>
          <MusicPlayer />
         <ImageBackground
-        source={require('../assets/background/home.png')}
+        source={require('../assets/loader/loader3.png')}
         style={styles.backgroundImage}
         resizeMode="cover"
       >
