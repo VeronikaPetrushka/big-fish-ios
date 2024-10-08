@@ -94,7 +94,7 @@ const App = () => {
                                     <ImageBackground source={loaderImage} style={styles.image} />
                                     <View style={styles.overlay} />
                                     <View style={styles.textContainer}>
-                                        <Text style={styles.congratText}>Welcome to Fishing Handbook Time</Text>
+                                        <Text style={styles.congratText}>Welcome to Fishing Time</Text>
                                         <Progress.Bar
                                             width={250}
                                             height={10}
@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         position: 'absolute',
-        bottom: height * 0.28,
+        bottom: height * 0.35,
         left: 0,
         right: 0,
         zIndex: 2
