@@ -80,17 +80,17 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         paddingVertical: 10,
         flexDirection: 'row',
-        backgroundColor: '#66c0f4',
+        backgroundColor: '#b3dbff',
         alignSelf: "center",
     },
     btnContainer: {
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     button: {
         width: 45,
         height: 45,
-        opacity: 0.8,
+        padding: 3
     },
     activeButton: {
         backgroundColor: '#fff',

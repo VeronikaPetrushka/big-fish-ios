@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
       },
 
     userContainer: {
-        backgroundColor: '#a8cce1',
+        backgroundColor: '#b3dbff',
         width: '100%',
         height: 80,
         alignItems: 'center',
@@ -254,7 +254,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         width: '100%',
         borderWidth: 2,
-        borderColor: '#d2f0bc',
+        borderColor: '#b3dbff',
+        backgroundColor: ('rgba(39, 116, 241, 0.3)'),
         borderRadius: 12,
         marginBottom: 10,
         zIndex: 10
@@ -262,7 +263,7 @@ const styles = StyleSheet.create({
 
     btnTxt: {
         fontSize: 20,
-        color: '#d2f0bc',
+        color: '#b3dbff',
         fontWeight: '600'
     }
 });
